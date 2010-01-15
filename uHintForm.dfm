@@ -1,0 +1,35 @@
+object HintForm: THintForm
+  Left = 483
+  Top = 297
+  Width = 240
+  Height = 147
+  Caption = 'HintForm'
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clBlack
+  Font.Height = -11
+  Font.Name = 'Verdana'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  OnResize = FormResize
+  PixelsPerInch = 96
+  TextHeight = 13
+  object HintLabel: TLabel
+    Left = 8
+    Top = 8
+    Width = 60
+    Height = 14
+    Caption = 'UserName'
+    Color = clBlack
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWhite
+    Font.Height = -11
+    Font.Name = 'Georgia'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+    ShowAccelChar = False
+    Transparent = True
+  end
+end

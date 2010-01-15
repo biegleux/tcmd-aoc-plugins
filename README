@@ -1,0 +1,32 @@
+A2LView - AoE2 Recorded Games Information Viewer
+------------------------------------------------
+
+A2LView is a lister plugin for Total Commander.
+This plugin is intended to display information about AoE2 recorded games as well as scenario files.
+Supported extensions: mgl, mgx, scn, scx (AOK & AOC recorded games, AOK & AOC scenario files)
+
+Copyright (c) 2009 biegleux <biegleux@gmail.com>
+Homepage: http://aoc-mgx-utils.sourceforge.net/
+
+License Agreement
+-----------------
+This plugin is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses>.
+
+Notes On Source Code
+--------------------
+Used Third-Party Code:
+delphi zlib <http://www.base2ti.com/zlib.htm>
+PNG Delphi by Gustavo Daud <http://pngdelphi.sourceforge.net> (link is dead due to change of ownership)
+JEDI Visual Component Library <http://jvcl.delphi-jedi.org/>
+Embedded Web Browser Component <http://www.bsalsa.com/>
