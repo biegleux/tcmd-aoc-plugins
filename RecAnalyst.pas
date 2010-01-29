@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses>.
  *)
-unit RecAnalyst;
+{ $DEFINE LIB}
+unit {$IFDEF LIB}uRecAnalyst{$ELSE}RecAnalyst{$ENDIF};
 
 interface
 { $DEFINE EXTRACT}
@@ -63,7 +64,7 @@ type
     Human: Boolean;
     Team: Integer;
     Owner: Boolean;
-    Civ: String;
+    Civ: PChar;
     CivId: TCivilization;
     ColorId: Integer;
     {$IFDEF EXTENDED}Color: Cardinal;{$ENDIF}
@@ -146,12 +147,12 @@ type
     FGameSpeed: TGameSpeed;
     FRevealMap: TRevealMap;
     FMapSize: TMapSize;
-    function GetGameType: String;
-    function GetMapStyle: String;
-    function GetDifficultyLevel: String;
-    function GetGameSpeed: String;
-    function GetRevealMap: String;
-    function GetMapSize: String;
+    function GetGameType: PChar;
+    function GetMapStyle: PChar;
+    function GetDifficultyLevel: PChar;
+    function GetGameSpeed: PChar;
+    function GetRevealMap: PChar;
+    function GetMapSize: PChar;
     function GetIsScenario: Boolean;
   public
     Map: String;
@@ -183,12 +184,12 @@ type
     property MapSize: TMapSize read FMapSize write FMapSize;
     { write access because of back-end, don't like it, but can be useful }
 
-    property sGameType: String read GetGameType;
-    property sMapStyle: String read GetMapStyle;
-    property sDifficultyLevel: String read GetDifficultyLevel;
-    property sGameSpeed: String read GetGameSpeed;
-    property sRevealMap: String read GetRevealMap;
-    property sMapSize: String read GetMapSize;
+    property sGameType: PChar read GetGameType;
+    property sMapStyle: PChar read GetMapStyle;
+    property sDifficultyLevel: PChar read GetDifficultyLevel;
+    property sGameSpeed: PChar read GetGameSpeed;
+    property sRevealMap: PChar read GetRevealMap;
+    property sMapSize: PChar read GetMapSize;
     property IsScenario: Boolean read GetIsScenario;
   end;
 
@@ -307,14 +308,18 @@ type
     FKeepStreams: Boolean;  { if false, header and body streams will be cleaned after analysis, default: false }
     GaiaObjects: TObjectList;
     PlayerObjects: TObjectList;
-
+    {$IFDEF LIB}
+    FLastError: Integer;
+    {$ENDIF}
+    {$IFNDEF LIB}
     FZeroHeaderLen: Boolean;
+    {$ENDIF}
 
     function ExtractStreams: Boolean; virtual;
     function AnalyzeHeader: Boolean; virtual;
     function AnalyzeBody: Boolean; virtual;
     procedure PostAnalyze; virtual;
-    function GetGameVersionStr: String;
+    function GetGameVersionStr: PChar;
     function ReadPlayerInfoBlockEx(const num_player: Byte): Boolean;
   public
     FileName: String;
@@ -336,31 +341,61 @@ type
     procedure BuildTeams;
     {$IFDEF EXTENDED}
     function GenerateMap(var Bitmap: TBitmap; const Width: Integer; const Height: Integer; bgColor: TColor): Boolean;
+    {$IFNDEF LIB}
     function GenerateResearches(var Bitmap: TBitmap; var ImageMap: TObjectList): Boolean;
+    {$ENDIF}
     {$ENDIF}
     procedure Reset;
     procedure Build(const AFileName: String);
     function AddComment(const Comment: String = ''): Boolean;
+    {$IFDEF LIB}
+    function GetLastErrorCode: Integer;
+    function GetLastErrorMsg: PChar;
+    class function ErrorCodeToString(const ErrorCode: Integer): PChar;
+    {$ENDIF}
     property AnalyzeTime: Integer read FAnalyzeTime;
     property ShowPositions: Boolean read FShowPositions write FShowPositions;
     property GameVersion: TGameVersion read FGameVersion write FGameVersion;
     { write access because of back-end, don't like it, but can be useful }
-    property sGameVersion: String read GetGameVersionStr;
+    property sGameVersion: PChar read GetGameVersionStr;
     property IsAOK: Boolean read FIsMgl;
     property IsAOC: Boolean read FIsMgx;
     property KeepStreams: Boolean read FKeepStreams write FKeepStreams;
+    {$IFNDEF LIB}
     property ZeroHeaderLen: Boolean read FZeroHeaderLen;
+    {$ENDIF}
+    {$IFDEF LIB}
+    property Analyzed: Boolean read FAnalyzed;
+    {$ENDIF}
   end;
+
+{$IFDEF LIB}
+{ RecAnalyst Error Codes }
+const
+  RECANALYST_OK          = 0;
+  RECANALYST_NOFILE      = 1;
+  RECANALYST_FILEEXT     = 2;
+  RECANALYST_EMPTYHEADER = 3;
+  RECANALYST_DECOMP      = 4;
+  RECANALYST_FILEREAD    = 5;
+  RECANALYST_FILEOPEN    = 6;
+  RECANALYST_UNKNOWN     = 7;
+  RECANALYST_HEADLENREAD = 8;
+  RECANALYST_NOTRIGG     = 9;
+  RECANALYST_NOGAMESETS  = 10;
+  RECANALYST_FILECREATE  = 11;
+  RECANALYST_COMP        = 12;
+{$ENDIF}
 
 implementation
 
 uses
-  {$IFDEF FPC}paszlib{$ELSE}ZlibEx{$ENDIF}, {$IFDEF EXTENDED}BitmapEx, {$ENDIF}Math, Context,
-  uLogger;
+  {$IFDEF FPC}paszlib{$ELSE}ZlibEx{$ENDIF}, {$IFDEF EXTENDED}BitmapEx, {$ENDIF}Math{$IFNDEF LIB}, Context,
+  uLogger{$ENDIF};
 
 resourcestring
   c_filenotspecified = 'No file has been specified for analyzing.';
-  c_cannotopenfile = 'Cannot open file "%s".';
+  c_cannotopenfile = {$IFDEF LIB}'Cannot open file.'{$ELSE}'Cannot open file "%s".'{$ENDIF};
   c_cannotreadsection = 'Cannot read sections.';
   c_cannotdecompress = 'Cannot decompress header section.';
   c_cannotcompress = 'Cannot compress header section.';
@@ -368,7 +403,7 @@ resourcestring
   c_wrongfileext = 'Wrong file extension, file format is not supported.';
   c_headerlenreaderror = 'Unable to read the header length.';
   c_headerlenempty = 'Header length is zero.';
-  c_cannotcreatefile = 'Cannot create file "%s".';
+  c_cannotcreatefile = {$IFDEF LIB}'Cannot create file.'{$ELSE}'Cannot create file "%s".'{$ENDIF};
   c_triggerinfonotfound = '"Trigger Info" block has not been found.';
   c_gamesettingsnotfound = '"Game Settings" block has not been found.';
 
@@ -380,6 +415,25 @@ resourcestring
   c_resigned = '%s resigned';
   c_min = '%d. min';
 
+{$IFDEF LIB}
+const
+  ErrorMessages: array[RECANALYST_OK..RECANALYST_COMP] of String = (
+    '',
+    c_filenotspecified,
+    c_wrongfileext,
+    c_headerlenempty,
+    c_cannotdecompress,
+    c_cannotreadsection,
+    c_cannotopenfile,
+    c_unknown,
+    c_headerlenreaderror,
+    c_triggerinfonotfound,
+    c_gamesettingsnotfound,
+    c_cannotcreatefile,
+    c_cannotcompress
+  );
+{$ENDIF}
+
 function UnitsCompare(Item1, Item2: Pointer): Integer; forward;
 function ResearchesCompare(Item1, Item2: Pointer): Integer; forward;
 function ChatCompare(Item1, Item2: Pointer): Integer; forward;
@@ -389,6 +443,9 @@ function ResearchById(const Id: Integer): Integer; forward;
 function UnitById(const Id: Integer): Integer; forward;
 function BuildingById(const Id: Integer): Integer; forward;
 function MapById(const Id: Integer): Integer; forward;
+{$IFDEF LIB}
+function InArray(const Ary: array of Integer; Value: Integer): Integer; forward;
+{$ENDIF}
 {$IFDEF FPC}
 function ZDecompressStream2(inStream, outStream: TStream; windowBits: Integer): Integer; forward;
 function ZCompressStream2(inStream, outStream: TStream; level, windowBits, memLevel, strategy : Longint): Integer; forward;
@@ -805,21 +862,21 @@ begin
   ScFileName := '';
 end;
 
-function TGameSettings.GetGameType: String;
+function TGameSettings.GetGameType: PChar;
 begin
   Result := '';
   if (FGameType in [Low (GAME_TYPES)..High (GAME_TYPES)]) then
   Result := GAME_TYPES[FGameType];
 end;
 
-function TGameSettings.GetMapStyle: String;
+function TGameSettings.GetMapStyle: PChar;
 begin
   Result := '';
   if (FMapStyle in [Low (MAP_STYLES)..High (MAP_STYLES)]) then
     Result := MAP_STYLES[FMapStyle];
 end;
 
-function TGameSettings.GetDifficultyLevel: String;
+function TGameSettings.GetDifficultyLevel: PChar;
 begin
   Result := '';
   if FIsMgl then
@@ -833,21 +890,21 @@ begin
   end;
 end;
 
-function TGameSettings.GetGameSpeed: String;
+function TGameSettings.GetGameSpeed: PChar;
 begin
   Result := '';
   if (Ord (FGameSpeed) in [100, 150, 200]) then
     Result := GAME_SPEEDS[(Ord (FGameSpeed) - 100) div 50];
 end;
 
-function TGameSettings.GetRevealMap: String;
+function TGameSettings.GetRevealMap: PChar;
 begin
   Result := '';
   if (FRevealMap in [Low (REVEAL_SETTINGS)..High (REVEAL_SETTINGS)]) then
     Result := REVEAL_SETTINGS[FRevealMap];
 end;
 
-function TGameSettings.GetMapSize: String;
+function TGameSettings.GetMapSize: PChar;
 begin
   Result := '';
   if (FMapSize in [Low (MAP_SIZES)..High (MAP_SIZES)]) then
@@ -889,13 +946,14 @@ begin
 
     next_pos := 0;
     objectives_pos := 0;
-    FZeroHeaderLen := False;
+    {$IFNDEF LIB}FZeroHeaderLen := False;{$ENDIF}
     FAnalyzed := False;
     FKeepStreams := False;
     CommentString := '';
 
     GaiaObjects := TObjectList.Create;
     PlayerObjects := TObjectList.Create;
+    {$IFDEF LIB}FLastError := RECANALYST_OK;{$ENDIF}
   end;
 end;
 
@@ -958,14 +1016,28 @@ begin
   Result := False;
 
   if (FileName = '') then
+  {$IFDEF LIB}
+  begin
+    FLastError := RECANALYST_NOFILE;
+    Exit;
+  end;
+  {$ELSE}
     raise ERecAnalystException.Create (c_filenotspecified);
+  {$ENDIF}
 
   if (LowerCase (ExtractFileExt (FileName)) = MGL_EXT) then
     FIsMgl := True
   else if (LowerCase (ExtractFileExt (FileName)) = MGX_EXT) then
     FIsMgx := True
   else
+  {$IFDEF LIB}
+  begin
+    FLastError := RECANALYST_FILEEXT;
+    Exit;
+  end;
+  {$ELSE}
     raise ERecAnalystException.Create (c_wrongfileext);
+  {$ENDIF}
 
   ms := TMemoryStream.Create;
   inStream := TMemoryStream.Create;
@@ -975,12 +1047,24 @@ begin
       ms.Seek (0, soFromBeginning);
 
       if (ms.Read (header_len, SizeOf (header_len)) < SizeOf (header_len)) then
+      {$IFDEF LIB}
+      begin
+        FLastError := RECANALYST_HEADLENREAD;
+        Exit;
+      end;
+      {$ELSE}
         raise ERecAnalystException.Create (c_headerlenreaderror);
+      {$ENDIF}
 
       if (header_len = 0) then
       begin
+        {$IFDEF LIB}
+        FLastError := RECANALYST_EMPTYHEADER;
+        Exit;
+        {$ELSE}
         FZeroHeaderLen := True;
         raise ERecAnalystException.Create (c_headerlenempty);
+        {$ENDIF}
       end;
 
       { skip next_pos }
@@ -991,16 +1075,20 @@ begin
         Dec (header_len, SizeOf (next_pos) + SizeOf (header_len))
       else
         Dec (header_len, SizeOf (header_len));
-{
-      if (header_len > 1048576) then // 1MB
-        raise ERecAnalystException.Create (c_corruptedheader);
-}
+
       inStream.CopyFrom (ms, header_len);
       instream.Seek (0, soFromBeginning);
 
       {$IFDEF FPC}
       if (ZDecompressStream2 (inStream, FHeaderStream, -15) < 0) then
+      {$IFDEF LIB}
+      begin
+        FLastError := RECANALYST_DECOMP;
+        Exit;
+      end;
+      {$ELSE}
         raise ERecAnalystException.Create (c_cannotdecompress);
+      {$ENDIF}
       // zError (code)
       {$ELSE}
       ZDecompressStream2 (inStream, FHeaderStream, -15);
@@ -1013,18 +1101,20 @@ begin
 
       Result := True;
     except
+      {$IFNDEF LIB}
       on ERecAnalystException do
         raise;
+      {$ENDIF}
       on EReadError do
-        raise ERecAnalystException.Create (c_cannotreadsection);
+        {$IFDEF LIB}FLastError := RECANALYST_FILEREAD{$ELSE}raise ERecAnalystException.Create (c_cannotreadsection){$ENDIF};
       on EFOpenError do
-        raise ERecAnalystException.CreateFmt (c_cannotopenfile, [FileName]);
+        {$IFDEF LIB}FLastError := RECANALYST_FILEOPEN{$ELSE}raise ERecAnalystException.CreateFmt (c_cannotopenfile, [FileName]){$ENDIF};
       {$IFNDEF FPC}
       on EZDecompressionError do
-        raise ERecAnalystException.Create (c_cannotdecompress);
+        {$IFDEF LIB}FLastError := RECANALYST_DECOMP{$ELSE}raise ERecAnalystException.Create (c_cannotdecompress){$ENDIF};
       {$ENDIF}
       else
-        raise ERecAnalystException.Create (c_unknown);
+        {$IFDEF LIB}FLastError := RECANALYST_UNKNOWN{$ELSE}raise ERecAnalystException.Create (c_unknown){$ENDIF};
     end;
   finally
     FreeAndNil (ms);
@@ -1168,7 +1258,14 @@ begin
     until (Position < 0);
 
     if (trigger_info_pos = 0) then
+    {$IFDEF LIB}
+    begin
+      FLastError := RECANALYST_NOTRIGG;
+      Exit;
+    end;
+    {$ELSE}
       raise ERecAnalystException.Create (c_triggerinfonotfound);
+    {$ENDIF}
 
     { getting Game_settings position }
     game_settings_pos := 0;
@@ -1183,7 +1280,14 @@ begin
     until (Position < 0);
 
     if (game_settings_pos = 0) then
+    {$IFDEF LIB}
+    begin
+      FLastError := RECANALYST_NOGAMESETS;
+      Exit;
+    end;
+    {$ELSE}
       raise ERecAnalystException.Create (c_gamesettingsnotfound);
+    {$ENDIF}
 
     { getting Scenario_header position }
     scenario_header_pos := 0;
@@ -2134,7 +2238,7 @@ begin
     except
       FHeaderStream.Clear;
       FBodyStream.Clear;
-      raise;
+      {$IFNDEF LIB}raise;{$ENDIF}
     end;
   finally
     if not FKeepStreams then
@@ -2234,7 +2338,9 @@ begin
           Windows.SetPixel (Bmp.Canvas.Handle, x, y, TERRAIN_COLORS[terrain_id])
         else
         begin
+          {$IFNDEF LIB}
           Logger.SendWarning ('Color for terrain id %d has not been specified.', [terrain_id], True);
+          {$ENDIF}
           Windows.SetPixel (Bmp.Canvas.Handle, x, y, UNKNOWN_TERRAIN_COLOR);
         end;
       end;
@@ -2342,7 +2448,7 @@ begin
     Bmp.Free;
   end;
 end;
-
+{$IFNDEF LIB}
 function TRecAnalyst.GenerateResearches(var Bitmap: TBitmap; var ImageMap: TObjectList): Boolean;
 var
   Player: TPlayer;
@@ -2483,6 +2589,7 @@ begin
   Result := True;
 end;
 {$ENDIF}
+{$ENDIF}
 procedure TRecAnalyst.Reset;
 begin
   with Self do
@@ -2512,11 +2619,12 @@ begin
     GaiaObjects.Clear;
     PlayerObjects.Clear;
 
-    FZeroHeaderLen := False;
+    {$IFNDEF LIB}FZeroHeaderLen := False;{$ENDIF}
     FAnalyzed := False;
     next_pos := 0;
     objectives_pos := 0;
     CommentString := '';
+    {$IFDEF LIB}FLastError := RECANALYST_OK;{$ENDIF}
   end;
 end;
 
@@ -2678,7 +2786,7 @@ begin
 //    InGameChat.CustomSort (@ChatSortCompare);
 end;
 
-function TRecAnalyst.GetGameVersionStr: String;
+function TRecAnalyst.GetGameVersionStr: PChar;
 begin
   Result := '';
   if not (FGameVersion in [Low (GAME_VERSIONS)..High (GAME_VERSIONS)]) then
@@ -2721,18 +2829,20 @@ begin
 
       outStream.SaveToFile (AFileName);
     except
+      {$IFNDEF LIB}
       on ERecAnalystException do
         raise;
+      {$ENDIF}
       on EReadError do
-        raise ERecAnalystException.Create (c_cannotreadsection);
+        {$IFDEF LIB}FLastError := RECANALYST_FILEREAD{$ELSE}raise ERecAnalystException.Create (c_cannotreadsection){$ENDIF};
       on EFCreateError do
-        raise ERecAnalystException.CreateFmt (c_cannotcreatefile, [FileName]);
+        {$IFDEF LIB}FLastError := RECANALYST_FILECREATE{$ELSE}raise ERecAnalystException.CreateFmt (c_cannotcreatefile, [FileName]){$ENDIF};
       {$IFNDEF FPC}
       on EZCompressionError do
-        raise ERecAnalystException.Create (c_cannotcompress);
+        {$IFDEF LIB}FLastError := RECANALYST_COMP{$ELSE}raise ERecAnalystException.Create (c_cannotcompress){$ENDIF};
       {$ENDIF}
       else
-        raise ERecAnalystException.Create (c_unknown);
+        {$IFDEF LIB}FLastError := RECANALYST_UNKNOWN{$ELSE}raise ERecAnalystException.Create (c_unknown){$ENDIF};
     end;
   finally
     hs.Free;
@@ -2815,8 +2925,8 @@ var
   i, j: Integer;
   exist_object_pos: LongInt;
   buff256: array[0..255] of Char;
-  object_type, prev_object_type: Byte;
-  unit_id, prev_unit_id: Word;
+  object_type{$IFNDEF LIB}, prev_object_type{$ENDIF}: Byte;
+  unit_id{$IFNDEF LIB}, prev_unit_id{$ENDIF}: Word;
   owner, b: Byte;
   pos_x, pos_y: Single;
   Player, P: TPlayer;
@@ -2938,15 +3048,19 @@ begin
 
         if (exist_object_pos = 0) then
         begin
+          {$IFNDEF LIB}
           { we don't raise exception here }
           Logger.SendError ('Exist_Object block has not been found.', True);
+          {$ENDIF}
           Exit;
         end;
 
         while True do
         begin
+          {$IFNDEF LIB}
           prev_object_type := object_type;
           prev_unit_id := unit_id;
+          {$ENDIF}
 
           Read (object_type, SizeOf (object_type));
           Read (owner, SizeOf (owner));
@@ -3063,8 +3177,10 @@ begin
                 end;
                 if (j > 1000) then
                 begin
+                  {$IFNDEF LIB}
                   Logger.SendError ('object_end_separator has not been found for object_type=%d, owner=%d',
                     [object_type, owner], True);
+                  {$ENDIF}
                   Exit;
                 end;
               end;
@@ -3101,8 +3217,10 @@ begin
                 end;
                 if (j > 1000) then
                 begin
+                  {$IFNDEF LIB}  
                   Logger.SendError ('object_end_separator has not been found for object_type=%d, owner=%d',
                     [object_type, owner], True);
+                  {$ENDIF}
                   Exit;
                 end;
                 Seek (126, soFromCurrent);
@@ -3125,16 +3243,20 @@ begin
                   Seek (SizeOf (objects_mid_separator_gaia), soFromCurrent)
                 else
                 begin
+                  {$IFNDEF LIB}
                   Logger.SendError ('Incorrect data has been detected at %x: prev_object_type=%d, prev_unit_id=%d, owner=%d',
                     [Position, prev_object_type, prev_unit_id, owner], True);
+                  {$ENDIF}
                   Exit;
                 end;
               end;
 
             else
               begin
+                {$IFNDEF LIB}
                 Logger.SendError ('Incorrect data has been detected a %x: prev_object_type=%d, prev_unit_id=%d, owner=%d',
                   [Position, prev_object_type, prev_unit_id, owner], True);
+                {$ENDIF}
                 Exit;
               end;
           end;
@@ -3143,11 +3265,32 @@ begin
     end;
     Result := True;
   except
+    {$IFNDEF LIB}
     on E: Exception do
       Logger.SendException(E, True);
+    {$ENDIF}
   end;
 end;
+{$IFDEF LIB}
+function TRecAnalyst.GetLastErrorCode: Integer;
+begin
+  Result := FLastError;
+end;
 
+function TRecAnalyst.GetLastErrorMsg: PChar;
+begin
+  Result := TRecAnalyst.ErrorCodeToString (FLastError);
+end;
+
+class function TRecAnalyst.ErrorCodeToString(const ErrorCode: Integer): PChar;
+begin
+  try
+    Result := PChar (ErrorMessages[ErrorCode]);
+  except
+    Result := '';
+  end;
+end;
+{$ENDIF}
 function UnitsCompare(Item1, Item2: Pointer): Integer;
 begin
   if TTrainedUnit(Item1).Count < TTrainedUnit(Item2).Count then
@@ -3228,6 +3371,20 @@ function MapById(const Id: Integer): Integer;
 begin
   Result := ItemById (MAPS, Id);
 end;
+{$IFDEF LIB}
+function InArray(const Ary: array of Integer; Value: Integer): Integer;
+var
+  i: Integer;
+begin
+  Result := -1;
+  for i := Low(Ary) to High(Ary) do
+    if (Ary[i] = Value) then
+    begin
+      Result := i;
+      Break;
+    end;
+end;
+{$ENDIF}
 {$IFDEF FPC}
 function ZDecompressStream2(inStream, outStream: TStream; windowBits: Integer): Integer;
 const
