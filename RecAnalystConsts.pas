@@ -30,7 +30,7 @@ uses
 
 type
   TCivRec = record
-    Name: String;
+    Name: PChar;
     ResName: String;
   end;
 
@@ -113,29 +113,29 @@ const
     (Id: miCustom;         Name: 'Custom'),
     (Id: miBlindRandom;    Name: 'Blind Random'));
 
-  GAME_VERSIONS: array[TGameVersion] of String = (
+  GAME_VERSIONS: array[TGameVersion] of PChar = (
     'Unknown', 'AOK', 'AOK Trial', 'AOK 2.0', 'AOK 2.0a', 'AOC', 'AOC Trial', 'AOC 1.0', 'AOC 1.0c');
 
-  MAP_STYLES: array[TMapStyle] of String = (
+  MAP_STYLES: array[TMapStyle] of PChar = (
     'Standard', 'Real World', 'Custom');
 
-  AOC_DIFFICULTY_LEVELS: array[TDifficultyLevel] of String = (
+  AOC_DIFFICULTY_LEVELS: array[TDifficultyLevel] of PChar = (
     'Hardest', 'Hard', 'Moderate', 'Standard', 'Easiest');
 
-  AOK_DIFFICULTY_LEVELS: array[TDifficultyLevel] of String = (
+  AOK_DIFFICULTY_LEVELS: array[TDifficultyLevel] of PChar = (
     'Hardest', 'Hard', 'Moderate', 'Easy', 'Easiest');
 
-  GAME_TYPES: array[TGameType] of String = (
+  GAME_TYPES: array[TGameType] of PChar = (
     'Random Map', 'Regicide', 'Death Match', 'Scenario', 'Campaign',
     'King of the Hill', 'Wonder Race', 'Defend the Wonder', 'Turbo Random Map');
 
-  GAME_SPEEDS: array[0..2] of String = (
+  GAME_SPEEDS: array[0..2] of PChar = (
     'Slow', 'Normal', 'Fast');
 
-  REVEAL_SETTINGS: array[TRevealMap] of String = (
+  REVEAL_SETTINGS: array[TRevealMap] of PChar = (
     'Normal', 'Explored', 'All Visible');
 
-  MAP_SIZES: array[TMapSize] of String = (
+  MAP_SIZES: array[TMapSize] of PChar = (
     'Tiny (2 players)', 'Small (3 players)', 'Medium (4 players)', 'Normal (6 players)',
     'Large (8 players)', 'Giant');
 
