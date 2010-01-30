@@ -31,7 +31,7 @@ interface
 
 uses
   Classes, Windows, {$IFDEF EXTENDED}Graphics, {$IFNDEF FPC}PNGImage, {$ENDIF}{$ENDIF}SysUtils,
-  Contnrs, RecAnalystConsts;
+  Contnrs, RecAnalystConsts, MemStream;
 
 type
   TBuildingList = class;
@@ -291,8 +291,8 @@ type
   protected
     FIsMgl: Boolean;
     FIsMgx: Boolean;
-    FHeaderStream: TMemoryStream;
-    FBodyStream: TMemoryStream;
+    FHeaderStream: TMemStream;
+    FBodyStream: TMemStream;
     FMapData: array of array of Integer;
     FMapWidth: LongInt;
     FMapHeight: LongInt;
@@ -314,13 +314,14 @@ type
     {$IFNDEF LIB}
     FZeroHeaderLen: Boolean;
     {$ENDIF}
+    Queue: TQueue;
 
     function ExtractStreams: Boolean; virtual;
     function AnalyzeHeader: Boolean; virtual;
     function AnalyzeBody: Boolean; virtual;
     procedure PostAnalyze; virtual;
     function GetGameVersionStr: PChar;
-    function ReadPlayerInfoBlockEx(const num_player: Byte): Boolean;
+    function ReadPlayerInfoBlockEx: Boolean;
   public
     FileName: String;
     GameSettings: TGameSettings;
@@ -923,8 +924,8 @@ begin
   begin
     FIsMgl := False;
     FIsMgx := False;
-    FHeaderStream := TMemoryStream.Create;
-    FBodyStream := TMemoryStream.Create;
+    FHeaderStream := TMemStream.Create;
+    FBodyStream := TMemStream.Create;
     FMapWidth := 0;
     FMapHeight := 0;
     FileName := '';
@@ -953,6 +954,7 @@ begin
 
     GaiaObjects := TObjectList.Create;
     PlayerObjects := TObjectList.Create;
+    Queue := TQueue.Create;
     {$IFDEF LIB}FLastError := RECANALYST_OK;{$ENDIF}
   end;
 end;
@@ -973,6 +975,7 @@ begin
   InGameChatMessages.Free;
   GaiaObjects.Free;
   PlayerObjects.Free;
+  Queue.Free;
   SetLength (FMapData, 0);
 end;
 
@@ -1146,8 +1149,10 @@ const
   con2: array[0..1] of Char = (#$A1, #$47);
   scenario_constant: array[0..3] of Char = (#$F6, #$28, #$9C, #$3F);
   aok_separator: array[0..3] of Char = (#$9A, #$99, #$99, #$3F);
-  mgl_magic_constant: array[0..6] of Char = (#$00, #$16, #$BD, #$00, #$00, #$00, #$21);
-  mgx_magic_constant: array[0..6] of Char = (#$00, #$16, #$C6, #$00, #$00, #$00, #$21);
+//  mgl_magic_constant: array[0..6] of Char = (#$00, #$16, #$BD, #$00, #$00, #$00, #$21);
+//  mgx_magic_constant: array[0..6] of Char = (#$00, #$16, #$C6, #$00, #$00, #$00, #$21);
+  player_info_end_separator: array[0..11] of Char = (
+    #$00, #$0B, #$00, #$02, #$00, #$00, #$00, #$02, #$00, #$00, #$00, #$0B);
 //  mgl_pi_separator: array[0..3] of Char = (#$98, #$9E, #$00, #$00);
 //  mgx_pi_separator: array[0..3] of Char = (#$4C, #$27, #$00, #$00);
 
@@ -1168,57 +1173,58 @@ const
 var
   buff: array[0..7] of Byte;
   version: array[0..7] of Char;
-  trigger_info_pos: LongInt;
-  game_settings_pos: LongInt;
-  scenario_header_pos: LongInt;
-  map_id: LongInt;
-  difficulty: LongInt;
+  trigger_info_pos: Longint;
+  game_settings_pos: Longint;
+  scenario_header_pos: Longint;
+  map_id: Longint;
+  difficulty: Longint;
   i, j, x, y: Integer;
-  player_data_index, human, name_len: LongInt;
+  player_data_index, human, name_len: Longint;
   buff256: array[0..255] of Char;
   buff65536: array[0..65535] of Char;
   Player, Player_: TPlayer;
-  num_trigger: LongInt;
-  reveal_map, map_size, pop_limit: LongInt;
+  num_trigger: Longint;
+  reveal_map, map_size, pop_limit: Longint;
   game_type, lock_diplomacy: Byte;
-  lock_teams: LongInt;
-  num_chat, chat_len, throw_chat: LongInt;
-  include_ai, string_length: LongInt;
+  lock_teams: Boolean;
+  num_chat, chat_len, throw_chat: Longint;
+  include_ai: Boolean;
+  string_length: Longint;
   num_string, num_rule: Word;
-  game_speed: LongInt;
+  game_speed: Longint;
   rec_player_ref: Word;
   num_player: Byte;
-  map_size_x, map_size_y: Integer;
-  num_unknown_data, num_float: LongInt;
+  map_size_x, map_size_y: Longint;
+  num_unknown_data, num_float: Longint;
   terrain_id, elevation: Byte;
   init_camera_pos_x, init_camera_pos_y: Single;
   civilization, player_color: Byte;
   map_found: Boolean;
-  desc_len, num_effect, num_selected_object, text_len, sound_len: LongInt;
+  desc_len, num_effect, num_selected_object, text_len, sound_len: Longint;
   ChatMessage: TChatMessage;
   data6: Single;
-  num_condition: LongInt;
+  num_condition: Longint;
   team_indexes: array[0..7] of Byte;
   original_sc_filename_len, instruction_len: Word;
   separator_ptr: Pointer;
   food, wood, stone, gold, headroom, population, civilian_pop, military_pop: Single;
-  unknown25, victory_condition: LongInt;
+  unknown25, victory_condition: Longint;
   is_timelimit: Byte;
   time_limit: Single;
   len: Word;
-  num_data, num_couples, map_size_x2, map_size_y2, num_unknown_data2: LongInt;
+  num_data, num_couples, map_size_x2, map_size_y2, num_unknown_data2: Longint;
 begin
   Result := False;
-  FillChar (buff, SizeOf (buff), $00);
-  FillChar (buff256, SizeOf (buff256), #0);
+  FillChar(buff, SizeOf(buff), $00);
+  FillChar(buff256, SizeOf(buff256), #0);
 
   with FHeaderStream do
   begin
-    Seek (0, soFromBeginning);
+    Seek(0, soFromBeginning);
 
     { getting version }
-    FillChar (version, SizeOf (version), #0);
-    Read (version, SizeOf (version));
+    FillChar(version, SizeOf(version), #0);
+    ReadBuffer(version, SizeOf(version));
     if (version = VER_94) then
       FGameVersion := gvAOC
     else if (version = VER_93) then
@@ -1245,16 +1251,16 @@ begin
     GameSettings.FIsMgl := FIsMgl;
 
     { getting Trigger_info position }
-    Seek (-SizeOf (constant2), soFromEnd);
+    Seek(-SizeOf(constant2), soFromEnd);
     trigger_info_pos := 0;
     repeat
-      Read (buff, SizeOf (constant2));
-      if CompareMem (@buff, @constant2, SizeOf (constant2)) then
+      ReadBuffer(buff, SizeOf(constant2));
+      if CompareMem(@buff, @constant2, SizeOf(constant2)) then
       begin
         trigger_info_pos := Position;
         Break;
       end;
-      Seek (-(SizeOf (constant2) + 1), soFromCurrent);
+      Seek(-(SizeOf(constant2) + 1));
     until (Position < 0);
 
     if (trigger_info_pos = 0) then
@@ -1264,19 +1270,19 @@ begin
       Exit;
     end;
     {$ELSE}
-      raise ERecAnalystException.Create (c_triggerinfonotfound);
+      raise ERecAnalystException.Create(c_triggerinfonotfound);
     {$ENDIF}
 
     { getting Game_settings position }
     game_settings_pos := 0;
     repeat
-      Read (buff, SizeOf (separator));
-      if CompareMem (@buff, @separator, SizeOf (separator)) then
+      ReadBuffer(buff, SizeOf(separator));
+      if CompareMem(@buff, @separator, SizeOf(separator)) then
       begin
         game_settings_pos := Position;
         Break;
       end;
-      Seek (-(SizeOf (separator) + 1), soFromCurrent);
+      Seek(-(SizeOf(separator) + 1));
     until (Position < 0);
 
     if (game_settings_pos = 0) then
@@ -1286,7 +1292,7 @@ begin
       Exit;
     end;
     {$ELSE}
-      raise ERecAnalystException.Create (c_gamesettingsnotfound);
+      raise ERecAnalystException.Create(c_gamesettingsnotfound);
     {$ENDIF}
 
     { getting Scenario_header position }
@@ -1295,30 +1301,30 @@ begin
       separator_ptr := @scenario_constant
     else
       separator_ptr := @aok_separator;
-    { note: SizeOf (scenario_constant) = SizeOf (aok_separator) }
+    { note: SizeOf(scenario_constant) = SizeOf(aok_separator) }
 
     repeat
-      Read (buff, SizeOf (scenario_constant));
-      if CompareMem (@buff, separator_ptr, SizeOf (scenario_constant)) then
+      ReadBuffer(buff, SizeOf(scenario_constant));
+      if CompareMem(@buff, separator_ptr, SizeOf(scenario_constant)) then
       begin
-        scenario_header_pos := Position - SizeOf (scenario_constant) - 4 {next_unit_id};
+        scenario_header_pos := Position - SizeOf(scenario_constant) - 4 {next_unit_id};
         Break;
       end;
-      Seek (-(SizeOf (scenario_constant) + 1), soFromCurrent);
+      Seek(-(SizeOf(scenario_constant) + 1));
     until (Position < 0);
 
     { getting Game_Settings data }
     { skip negative[2] }
-    Seek (game_settings_pos + 8, soFromBeginning);
+    Seek(game_settings_pos + 8, soFromBeginning);
     if FIsMgx then
-      Read (map_id, SizeOf (map_id));
+      ReadInt32(map_id);
 
-    Read (difficulty, SizeOf (difficulty));
-    Read (lock_teams, SizeOf (lock_teams)); { duplicated data, see lock_diplomacy }
+    ReadInt32(difficulty);
+    ReadBool(lock_teams); { duplicated data, see lock_diplomacy }
 
     if FIsMgx then
     begin
-      i := MapById (map_id);
+      i := MapById(map_id);
       if (i <> -1) then
       begin
         GameSettings.Map := MAPS[i].Name;
@@ -1333,15 +1339,15 @@ begin
     end;
 
     GameSettings.FDifficultyLevel := TDifficultyLevel(difficulty);
-    GameSettings.LockDiplomacy := (lock_teams = $01);
+    GameSettings.LockDiplomacy := lock_teams;
 
     { getting Player_info data }
     for i := 0 to 8 do
     begin
-      Read (player_data_index, SizeOf (player_data_index));
-      Read (human, SizeOf (human));
-      Read (name_len, SizeOf (name_len));
-      Read (buff256, name_len);
+      ReadInt32(player_data_index);
+      ReadInt32(human);
+      Read(name_len, SizeOf(name_len));
+      Read(buff256, name_len);
       buff256[name_len] := #0;
 
       { sometimes very rarely index is 1 }
@@ -1350,7 +1356,7 @@ begin
       if (i <> 0) then
       begin
         Player := TPlayer.Create;
-        Player.Name := {$IFDEF FPC}PChar (buff256){$ELSE}buff256{$ENDIF};
+        Player.Name := {$IFDEF FPC}PChar(buff256){$ELSE}buff256{$ENDIF};
         Player.Index := player_data_index;
         Player.Human := (human = $02);
         PlayerList.AddPlayer (Player);
@@ -1360,10 +1366,10 @@ begin
     { getting game type for aok }
     if FIsMgl then
     begin
-      Seek (trigger_info_pos - SizeOf (constant2), soFromBeginning);
-      Seek (-6, soFromCurrent);
+      Seek(trigger_info_pos - SizeOf(constant2), soFromBeginning);
+      Seek(-6);
       { unknown25 }
-      Read (unknown25, SizeOf (unknown25));
+      ReadInt32(unknown25);
       case unknown25 of
           1: GameSettings.FGameType := gtDeathMatch;
         256: GameSettings.FGameType := gtRegicide;
@@ -1371,80 +1377,78 @@ begin
     end;
 
     { getting victory }
-    Seek (trigger_info_pos - SizeOf (constant2), soFromBeginning);
+    Seek(trigger_info_pos - SizeOf (constant2), soFromBeginning);
     if FIsMgx then
-      Seek (-7, soFromCurrent);
-    Seek (-110, soFromCurrent);
-    Read (victory_condition, SizeOf (victory_condition));
-    Seek (8, soFromCurrent);
-    Read (is_timelimit, SizeOf (is_timelimit));
+      Seek(-7);
+    Seek(-110);
+    ReadInt32(victory_condition);
+    Seek(8);
+    ReadChar(is_timelimit);
     if (is_timelimit <> 0) then
-      Read (time_limit, SizeOf (time_limit));
+      ReadFloat(time_limit);
 
     with GameSettings.Victory do
     begin
       VictoryCondition := TVictoryCondition(victory_condition);
       if (is_timelimit <> 0) then
-        TimeLimit := Round (time_limit) div 10;
+        TimeLimit := Round(time_limit) div 10;
     end;
 
     { Trigger_info }
-    Seek (trigger_info_pos + 1, soFromBeginning);
+    Seek(trigger_info_pos + 1, soFromBeginning);
 
     { always zero in mgl? or not a really trigger_info here for aok }
-    Read (num_trigger, SizeOf (num_trigger));
+    ReadInt32(num_trigger);
 
     if (num_trigger <> 0) then
     begin
       { skip Trigger_info data }
       for i := 0 to num_trigger - 1 do
       begin
-        Seek (18, soFromCurrent);
-        Read (desc_len, SizeOf (desc_len));
-        Seek (desc_len, soFromCurrent);
-        Read (name_len, SizeOf (name_len));
-        Seek (name_len, soFromCurrent);
-        Read (num_effect, SizeOf (num_effect));
+        Seek(18);
+        ReadInt32(desc_len);
+        Seek(desc_len);
+        ReadInt32(name_len);
+        Seek(name_len);
+        ReadInt32(num_effect);
         for j := 0 to num_effect - 1 do
         begin
-          Seek (24, soFromCurrent);
-          Read (num_selected_object, SizeOf (num_selected_object));
+          Seek(24);
+          ReadInt32(num_selected_object);
           if num_selected_object = -1 then
             num_selected_object := 0;
-          Seek (72, soFromCurrent);
-          Read (text_len, SizeOf (text_len));
-          Seek (text_len, soFromCurrent);
-          Read (sound_len, SizeOf (sound_len));
-          Seek (sound_len, soFromCurrent);
-          Seek (num_selected_object * 4, soFromCurrent);
+          Seek(72);
+          ReadInt32(text_len);
+          Seek(text_len);
+          ReadInt32(sound_len);
+          Seek(sound_len);
+          Seek(num_selected_object shl 2);
         end;
-        Seek (num_effect * 4, soFromCurrent);
-        Read (num_condition, SizeOf (num_condition));
-        for j := 0 to num_condition - 1 do
-          Seek (72, soFromCurrent);
-        Seek (4 * num_condition, soFromCurrent);
+        Seek(num_effect shl 2);
+        ReadInt32(num_condition);
+        Seek(76 * num_condition);
       end;
-      Seek (num_trigger * 4, soFromCurrent);
+      Seek(num_trigger shl 2);
 
       GameSettings.Map := '';
       GameSettings.FGameType := gtScenario;  { obsolete? }
     end;
 
     { Other_data }
-    Read (team_indexes, SizeOf (team_indexes));
+    ReadBuffer(team_indexes, SizeOf(team_indexes));
 
     for i := 0 to PlayerList.Count - 1 do
       PlayerList[i].Team := team_indexes[i] - 1;
 
-    Seek (1, soFromCurrent);  { always 1? }
-    Read (reveal_map, SizeOf (reveal_map));
-    Seek (4, soFromCurrent);  { always 1? }
-    Read (map_size, SizeOf (map_size));
-    Read (pop_limit, SizeOf (pop_limit));
+    Seek(1);  { always 1? }
+    ReadInt32(reveal_map);
+    Seek(4);  { always 1? }
+    ReadInt32(map_size);
+    ReadInt32(pop_limit);
     if FIsMgx then
     begin
-      Read (game_type, SizeOf (game_type));
-      Read (lock_diplomacy, SizeOf (lock_diplomacy));
+      ReadChar(game_type);
+      ReadChar(lock_diplomacy);
     end;
 
     with GameSettings do
@@ -1462,11 +1466,11 @@ begin
     { here comes pre-game chat (mgl doesn't hold this information }
     if FIsMgx then
     begin
-      Read (num_chat, SizeOf (num_chat));
+      ReadInt32(num_chat);
       for i := 0 to num_chat - 1 do
       begin
         throw_chat := 0;
-        Read (chat_len, SizeOf (chat_len));
+        ReadInt32(chat_len);
 
         { zero-length chat exists }
         if (chat_len = 0) then
@@ -1474,65 +1478,64 @@ begin
 
         // prevent overflow... it is possible to bypass message length checking in the game
         // we wont accept messages longer than 65535 its quite enough as valid maximum is about 247 chars (without prefixed string here)
-        if (chat_len > High (buff65536)) then
+        if (chat_len > High(buff65536)) then
         begin
-          throw_chat := chat_len - High (buff65536);
-          chat_len := High (buff65536);
+          throw_chat := chat_len - High(buff65536);
+          chat_len := High(buff65536);
         end;
 
-        Read (buff65536, chat_len);
+        ReadBuffer(buff65536, chat_len);
         if (throw_chat > 0) then
-          Seek (throw_chat, soFromCurrent);
+          Seek(throw_chat);
 
         if (buff65536[0] = '@') and (buff65536[1] = '#') and (buff65536[2] >= '1') and (buff65536[2] <= '8') then
         begin
           buff65536[chat_len] := #0;
                                   
           ChatMessage := TChatMessage.Create;
-          ChatMessage.Player := PlayerList.GetPlayerByIndex (StrToIntDef (buff65536[2], 0));
-          ChatMessage.Msg := Copy (buff65536, 4, Length (buff65536));
-          PreGameChatMessages.Add (ChatMessage);
+          ChatMessage.Player := PlayerList.GetPlayerByIndex(StrToIntDef(buff65536[2], 0));
+          ChatMessage.Msg := Copy(buff65536, 4, Length(buff65536));
+          PreGameChatMessages.Add(ChatMessage);
 
-          PreGameChat.Add (buff65536);
+          PreGameChat.Add(buff65536);
         end;
       end;
     end;
 
     { skip AI_info if exists }
-    Seek ($0C, soFromBeginning);
-    Read (include_ai, SizeOf (include_ai));
+    Seek($0C, soFromBeginning);
+    ReadBool(include_ai);
 
-    if (include_ai = $01) then
+    if (include_ai) then
     begin
-      Seek (2, soFromCurrent);
-      Read (num_string, SizeOf (num_string));
-      Seek (4, soFromCurrent);
+      Seek(2);
+      ReadWord(num_string);
+      Seek(4);
       for i := 0 to num_string - 1 do
       begin
-        Read (string_length, SizeOf (string_length));
-        Seek (string_length, soFromCurrent);
+        ReadInt32(string_length);
+        Seek(string_length);
       end;
-      Seek (6, soFromCurrent);
+      Seek(6);
       for i := 0 to 7 do
       begin
-        Seek (10, soFromCurrent);
-        Read (num_rule, SizeOf (num_rule));
-        Seek (4, soFromCurrent);
-        Seek (400 * num_rule, soFromCurrent);
+        Seek(10);
+        ReadWord(num_rule);
+        Seek(4 + 400 * num_rule);
       end;
-      Seek (5544, soFromCurrent);
+      Seek(5544);
     end;
 
     { getting data }
-    Seek (4, soFromCurrent);
-    Read (game_speed, SizeOf (game_speed));
-    Seek (37, soFromCurrent);
-    Read (rec_player_ref, SizeOf (rec_player_ref));
-    Read (num_player, SizeOf (num_player));
+    Seek(4);
+    ReadInt32(game_speed);
+    Seek(37);
+    ReadWord(rec_player_ref);
+    ReadChar(num_player);
 
     { 0 is GAIA, not appears in PlayerList }
-    Dec (rec_player_ref);
-    Dec (num_player);
+    Dec(rec_player_ref);
+    Dec(num_player);
 
     GameSettings.FGameSpeed := TGameSpeed(game_speed);
 
@@ -1555,72 +1558,75 @@ begin
     Inc (num_player);
 
     { getting map }
-    Seek (62, soFromCurrent);
+    Seek(62);
     if FIsMgl then
-      Seek (-2, soFromCurrent);
-    Read (map_size_x, SizeOf (map_size_x));
-    Read (map_size_y, SizeOf (map_size_y));
+      Seek(-2);
+    ReadInt32(map_size_x);
+    ReadInt32(map_size_y);
     FMapWidth := map_size_x;
     FMapHeight := map_size_y;
 
-    Read (num_unknown_data, SizeOf (num_unknown_data));
+    ReadInt32(num_unknown_data);
     { unknown data }
     for i := 0 to num_unknown_data - 1 do
     begin
-      Seek (1275, soFromCurrent);
-      Seek (map_size_x * map_size_y, soFromCurrent);
-
-      Read (num_float, SizeOf (num_float));
-      Seek (4 * num_float, soFromCurrent);
-      Seek (4, soFromCurrent);
+      Seek(1275 + map_size_x * map_size_y);
+      ReadInt32(num_float);
+      Seek((num_float shl 2) + 4);
     end;
-    Seek (2, soFromCurrent);
+    Seek(2);
 
-    SetLength (FMapData, map_size_x, map_size_y);
+    SetLength(FMapData, map_size_x, map_size_y);
     { map data }
     for y := 0 to map_size_y - 1 do
       for x := 0 to map_size_x - 1 do
       begin
-        Read (terrain_id, SizeOf (terrain_id));
-        Read (elevation, SizeOf (elevation));
+        ReadChar(terrain_id);
+        ReadChar(elevation);
         FMapData[x, y] := terrain_id + 1000 * (elevation + 1);
       end;
 
-    Read (num_data, SizeOf (num_data));
-    Seek (4, soFromCurrent);
-    Seek (4 * num_data, soFromCurrent);
+    ReadInt32(num_data);
+    Seek(4 + (num_data shl 2));
     for i := 0 to num_data - 1 do
     begin
-      Read (num_couples, SizeOf (num_couples));
-      Seek (8 * num_couples, soFromCurrent);
+      ReadInt32(num_couples);
+      Seek(num_couples shl 2);
     end;
-    Read (map_size_x2, SizeOf (map_size_x2));
-    Read (map_size_y2, SizeOf (map_size_y2));
-    Seek (map_size_x2 * map_size_y2 * 4, soFromCurrent);
-    Seek (4, soFromCurrent);
-    Read (num_unknown_data2, SizeOf (num_unknown_data2));
-    Seek (27 * num_unknown_data2, soFromCurrent);
+    ReadInt32(map_size_x2);
+    ReadInt32(map_size_y2);
+    Seek((map_size_x2 * map_size_y2 shl 2) + 4);
+    ReadInt32(num_unknown_data2);
+    Seek(27 * num_unknown_data2 + 4);
 
+    Queue.Push(Pointer(num_player));
+    Queue.Push(Pointer(map_size_x));
+    Queue.Push(Pointer(map_size_y));
+    Queue.Push(Pointer(Position));
     { getting Player_info }
-    if not ReadPlayerInfoBlockEx (num_player) then
+    if not ReadPlayerInfoBlockEx then
     begin
       { something gone wrong with extended analysis, use this older one }
       GaiaObjects.Clear;
       PlayerObjects.Clear;
+      Seek(Longint(Queue.Pop), soFromBeginning);      
 
-      { getting Player_info position }
+      { first is GAIA, skip some useless bytes }
+      if (FGameVersion = gvAOKTrial) or (FGameVersion = gvAOCTrial) then
+        Seek(4);
+      Seek(num_player + 70);  // + 2 len of playerlen
+      if FIsMgx then Seek(792) else Seek(756);
 
-      { TODO: more testing for mgl files would be desirable here }
-      Seek (128, soFromCurrent);
-      Seek (map_size_x * map_size_y * 4, soFromCurrent);
-      Seek (15, soFromCurrent);
-      Seek (5138, soFromCurrent);
+      if FIsMgx then Seek(41249) else Seek(34277);
+      Seek(map_size_x * map_size_y);
+      // Explored GAIA Objects
+      // Units Data II
 
       for i := 0 to (PlayerList.Count - 1) do
       begin
         Player := PlayerList[i];
         { skip cooping player, she/he has no data in Player_info }
-        Player_ := PlayerList.GetPlayerByIndex (Player.Index);
+        Player_ := PlayerList.GetPlayerByIndex(Player.Index);
 
         if (Assigned (Player_)) and (Player_ <> Player) and (Player_.CivId <> cNone) then
         begin
@@ -1633,117 +1639,101 @@ begin
           Continue;
         end;
 
-        FillChar (buff65536, SizeOf(buff65536), #0);
-        CopyMemory (@buff65536, @Player.Name[1], Length (Player.Name));
-        if FIsMgx then
+        if Queue.AtLeast(1) then
+          Seek(Longint(Queue.Pop), soFromBeginning)
+        else
         begin
-          len := SizeOf (mgx_magic_constant);
-          CopyMemory (@buff65536[Length (Player.Name)], @mgx_magic_constant, len)
-        end else
-        begin
-          len := SizeOf (mgl_magic_constant);
-          CopyMemory (@buff65536[Length (Player.Name)], @mgl_magic_constant, len);
-        end;
-        Inc (len, Length (Player.Name));
+          repeat
+            ReadBuffer(buff256, SizeOf(player_info_end_separator));
+            if CompareMem(@buff256, @player_info_end_separator, SizeOf(player_info_end_separator)) then
+              Break;
+            Seek(-SizeOf(player_info_end_separator) + 1);
+          until (Position >= Size);
 
-        while (Position <= (Size - len)) do
-        begin
-          Read (buff256, len);
-          if CompareMem (@buff256, @buff65536, len) then
-            Break;
-          Seek (-len + 1, soFromCurrent);
+          if (FGameVersion = gvAOKTrial) or (FGameVersion = gvAOCTrial) then
+            Seek(4);
+          Seek(num_player + 52 + Length(Player.Name)); // + null-terminator
         end;
 
         { Civ_header }
-        Read (food, SizeOf (food));
-        Read (wood, SizeOf (wood));
-        Read (stone, SizeOf (stone));
-        Read (gold, SizeOf (gold));
+        ReadFloat(food);
+        ReadFloat(wood);
+        ReadFloat(stone);
+        ReadFloat(gold);
         { headroom = (house capacity - population) }
-        Read (headroom, SizeOf (headroom));
-        Seek (4, soFromCurrent);
+        ReadFloat(headroom);
+        Seek(4);
         { Starting Age, note: PostImperial Age = Imperial Age here }
-        Read (data6, SizeOf (data6));
-        Seek (16, soFromCurrent);
-        Read (population, SizeOf (population));
-        Seek (100, soFromCurrent);
-        Read (civilian_pop, SizeOf (civilian_pop));
-        Seek (8, soFromCurrent);
-        Read (military_pop, SizeOf (military_pop));
-
-        if FIsMgx then
-          Seek (629, soFromCurrent)
-        else
-          Seek (593, soFromCurrent);
-
-        Read (init_camera_pos_x, SizeOf (init_camera_pos_x));
-        Read (init_camera_pos_y, SizeOf (init_camera_pos_y));
-
-        if FIsMgx then
-          Seek (9, soFromCurrent)
-        else
-          Seek (5, soFromCurrent);
-        { civilization }
-        Read (civilization, SizeOf (civilization));
+        ReadFloat(data6);
+        Seek(16);
+        ReadFloat(population);
+        Seek(100);
+        ReadFloat(civilian_pop);
+        Seek(8);
+        ReadFloat(military_pop);
+        if FIsMgx then Seek(629) else Seek(593);
+        ReadFloat(init_camera_pos_x);
+        ReadFloat(init_camera_pos_y);
+        if FIsMgx then Seek(9) else Seek(5);
+        ReadChar(civilization);
         { sometimes(?) civilization is zero in scenarios when the first player is briton (only? always? rule?) }
         if (civilization = 0) then
-          Inc (civilization);
+          Inc(civilization);
         { skip unknown9[3] }
-        Seek (3, soFromCurrent);
-        { player_color }
-        Read (player_color, SizeOf (player_color));
+        Seek(3);
+        ReadChar(player_color);
 
         with Player do
         begin
           CivId := TCivilization(civilization);
-          SetCiv (TCivilization(civilization));
+          SetCiv(TCivilization(civilization));
           ColorId := player_color;
-          {$IFDEF EXTENDED}SetColor (player_color);{$ENDIF}
-          InitialState.Position.X := Round (init_camera_pos_x);
-          InitialState.Position.Y := Round (init_camera_pos_y);
-          InitialState.Food := Round (food);
-          InitialState.Wood := Round (wood);
-          InitialState.Stone := Round (stone);
-          InitialState.Gold := Round (gold);
-          InitialState.StartingAge := TStartingAge (Round (data6));
+          {$IFDEF EXTENDED}SetColor(player_color);{$ENDIF}
+          InitialState.Position.X := Round(init_camera_pos_x);
+          InitialState.Position.Y := Round(init_camera_pos_y);
+          InitialState.Food := Round(food);
+          InitialState.Wood := Round(wood);
+          InitialState.Stone := Round(stone);
+          InitialState.Gold := Round(gold);
+          InitialState.StartingAge := TStartingAge(Round(data6));
           // TODO: Huns, Goths, Nomad etc. var...
-          InitialState.HouseCapacity := Round (headroom) + Round (population);
-          InitialState.Population := Round (population);
-          InitialState.CivilianPop := Round (civilian_pop);
-          InitialState.MilitaryPop := Round (military_pop);
+          InitialState.HouseCapacity := Round(headroom) + Round(population);
+          InitialState.Population := Round(population);
+          InitialState.CivilianPop := Round(civilian_pop);
+          InitialState.MilitaryPop := Round(military_pop);
           InitialState.ExtraPop := InitialState.Population - (InitialState.CivilianPop + InitialState.MilitaryPop);
         end;
 
-        Seek (4299, soFromCurrent);  { TODO: more testing for mgl files would be desirable here }
-      end;  { endfor }
-    end; { endif }
+        if FIsMgx then Seek(41249) else Seek(34277);
+        Seek(map_size_x * map_size_y);
+        // Explored GAIA Objects
+        // Units Data II
+      end;
+    end;
 
     { getting objectives or instructions }
     if (scenario_header_pos > 0) then
     begin
-      Seek (scenario_header_pos + 4433, soFromBeginning);
+      Seek(scenario_header_pos + 4433, soFromBeginning);
       { original scenario file name }
-      Read (original_sc_filename_len, SizeOf (original_sc_filename_len));
+      ReadWord(original_sc_filename_len);
       if (original_sc_filename_len > 0) then
       begin
-        FillChar (buff65536, SizeOf (buff65536), #0);
-        Read (buff65536, original_sc_filename_len);
-        GameSettings.ScFileName := {$IFDEF FPC}PChar (buff65536){$ELSE}buff65536{$ENDIF};
+        FillChar(buff65536, SizeOf(buff65536), #0);
+        ReadBuffer(buff65536, original_sc_filename_len);
+        GameSettings.ScFileName := {$IFDEF FPC}PChar(buff65536){$ELSE}buff65536{$ENDIF};
         if FIsMgl then
           GameSettings.FGameType := gtScenario; { this way we detect scenarios in mgl, is there any other way? }
       end;
-      if FIsMgx then
-        Seek (24, soFromCurrent)
-      else
-        Seek (20, soFromCurrent);
+      if FIsMgx then Seek(24) else Seek(20);
 
       { scenario instruction or Objectives string, depends on game type }
       objectives_pos := Position;
-      Read (instruction_len, SizeOf (instruction_len));
+      ReadWord(instruction_len);
       if (instruction_len > 0) then
       begin
-        FillChar (buff65536, SizeOf (buff65536), #0);
-        Read (buff65536, instruction_len);
+        FillChar(buff65536, SizeOf(buff65536), #0);
+        ReadBuffer(buff65536, instruction_len);
         if GameSettings.IsScenario then
         begin
 //          { we assume the first line usually indicates the scenario name }
@@ -1754,7 +1744,7 @@ begin
 //            buff65536[instruction_len - 1] := #0;
 //          GameSettings.Map := {$IFDEF FPC}PChar (buff65536){$ELSE}buff65536{$ENDIF};
         end else
-          GameSettings.ObjectivesString := {$IFDEF FPC}PChar (buff65536){$ELSE}buff65536{$ENDIF};
+          GameSettings.ObjectivesString := {$IFDEF FPC}PChar(buff65536){$ELSE}buff65536{$ENDIF};
       end;
     end;
 
@@ -1822,11 +1812,11 @@ end;
 
 function TRecAnalyst.AnalyzeBody: Boolean;
 var
-  time_cnt: LongInt;
+  time_cnt: Longint;
   age_flag: array[0..7] of Byte;
   m_body_len, i, idx: Integer;
-  od_type, command, chat_len, throw_chat, time: LongInt;
-  unknown, length: LongInt;
+  od_type, command, chat_len, throw_chat, time: Longint;
+  unknown, length: Longint;
   cmd, player_number, player_index, ver: Byte;
   buff256: array[0..255] of Char;
   Player, PlayerFrom, PlayerTo: TPlayer;
@@ -1841,40 +1831,40 @@ var
   Building: TBuilding;
   ChatMessage: TChatMessage;
 begin
-  time_cnt := Ord (GameSettings.GameSpeed);
+  time_cnt := Ord(GameSettings.GameSpeed);
 
   m_body_len := FBodyStream.Size;
-  FillChar (age_flag, SizeOf (age_flag), 0);
-  FillChar (buff256, SizeOf (buff256), 0);
+  FillChar(age_flag, SizeOf(age_flag), 0);
+  FillChar(buff256, SizeOf(buff256), 0);
 
   with FBodyStream do
   begin
-    Seek (0, soFromBeginning);
+    Seek(0, soFromBeginning);
     while (Position < m_body_len - 3) do
     begin
       if (Position = 0) and FIsMgl then
         od_type := $04
       else
-        Read (od_type, SizeOf (od_type));
+        ReadInt32(od_type);
 
       { ope_data types: 4(Game_start or Chat), 2(Sync), or 1(Command) }
       case od_type of
         $04, $03:
           begin
-            Read (command, SizeOf (command));
+            ReadInt32(command);
             if (command = $01F4) then
             begin
               { Game_start }
               if FIsMgl then
               begin
-                Seek (28, soFromCurrent);
-                Read (ver, SizeOf (ver));
+                Seek(28);
+                ReadChar(ver);
                 case ver of
                   0: if (FGameVersion <> gvAOKTrial) then
                         FGameVersion := gvAOK20;
                   1: FGameVersion := gvAOK20a;
                 end;
-                Seek (3, soFromCurrent);
+                Seek(3);
               end else
               begin
                 case od_type of
@@ -1882,62 +1872,62 @@ begin
                          FGameVersion := gvAOC10;
                   $04: FGameVersion := gvAOC10c;
                 end;
-                Seek (20, soFromCurrent);
+                Seek(20);
               end;
             end
             else if (command = -1) then
             begin
               { Chat }
               throw_chat := 0;
-              Read (chat_len, SizeOf (chat_len));
+              ReadInt32(chat_len);
               for i := 0 to PlayerList.Count - 1 do
               begin
                 Player := PlayerList[i];
-                if not Assigned (Player) then
+                if not Assigned(Player) then
                   Continue;
 
                 if (Player.FeudalTime <> 0) and (Player.FeudalTime < time_cnt) and (age_flag[i] < 1) then
                 begin
                   ChatMessage := TChatMessage.Create;
                   ChatMessage.Time := Player.FeudalTime;
-                  ChatMessage.Msg := Format (c_feudal_age_advance, [Player.Name]);
-                  InGameChatMessages.Add (ChatMessage);
+                  ChatMessage.Msg := Format(c_feudal_age_advance, [Player.Name]);
+                  InGameChatMessages.Add(ChatMessage);
 
-                  InGameChat.Add (Format ('%d@#0' + c_feudal_age_advance, [Player.FeudalTime, Player.Name]));
+                  InGameChat.Add(Format('%d@#0' + c_feudal_age_advance, [Player.FeudalTime, Player.Name]));
                   age_flag[i] := 1;
                 end;
                 if (Player.CastleTime <> 0) and (Player.CastleTime < time_cnt) and (age_flag[i] < 2) then
                 begin
                   ChatMessage := TChatMessage.Create;
                   ChatMessage.Time := Player.CastleTime;
-                  ChatMessage.Msg := Format (c_castle_age_advance, [Player.Name]);
-                  InGameChatMessages.Add (ChatMessage);
+                  ChatMessage.Msg := Format(c_castle_age_advance, [Player.Name]);
+                  InGameChatMessages.Add(ChatMessage);
 
-                  InGameChat.Add (Format ('%d@#0' + c_castle_age_advance, [Player.CastleTime, Player.Name]));
+                  InGameChat.Add(Format('%d@#0' + c_castle_age_advance, [Player.CastleTime, Player.Name]));
                   age_flag[i] := 2;
                 end;
                 if (Player.ImperialTime <> 0) and (Player.ImperialTime < time_cnt) and (age_flag[i] < 3) then
                 begin
                   ChatMessage := TChatMessage.Create;
                   ChatMessage.Time := Player.ImperialTime;
-                  ChatMessage.Msg := Format (c_imperial_age_advance, [Player.Name]);
-                  InGameChatMessages.Add (ChatMessage);
+                  ChatMessage.Msg := Format(c_imperial_age_advance, [Player.Name]);
+                  InGameChatMessages.Add(ChatMessage);
 
-                  InGameChat.Add (Format ('%d@#0' + c_imperial_age_advance, [Player.ImperialTime, Player.Name]));
+                  InGameChat.Add(Format('%d@#0' + c_imperial_age_advance, [Player.ImperialTime, Player.Name]));
                   age_flag[i] := 3;
                 end;
               end;
 
               // see reading chat in header section
-              if (chat_len > High (buff256)) then
+              if (chat_len > High(buff256)) then
               begin
-                throw_chat := chat_len - High (buff256);
-                chat_len := High (buff256);
+                throw_chat := chat_len - High(buff256);
+                chat_len := High(buff256);
               end;
 
-              Read (buff256, chat_len);
+              ReadBuffer(buff256, chat_len);
               if (throw_chat > 0) then
-                Seek (throw_chat, soFromCurrent);
+                Seek(throw_chat);
 
               if (buff256[0] = '@') and (buff256[1] = '#') and (buff256[2] >= '1') and (buff256[2] <= '8') then
               begin
@@ -1949,11 +1939,11 @@ begin
                 begin
                   ChatMessage := TChatMessage.Create;
                   ChatMessage.Time := time_cnt;
-                  ChatMessage.Player := PlayerList.GetPlayerByIndex (StrToIntDef (buff256[2], 0));
-                  ChatMessage.Msg := Copy (buff256, 4, System.Length (buff256));
-                  InGameChatMessages.Add (ChatMessage);
+                  ChatMessage.Player := PlayerList.GetPlayerByIndex(StrToIntDef (buff256[2], 0));
+                  ChatMessage.Msg := Copy (buff256, 4, System.Length(buff256));
+                  InGameChatMessages.Add(ChatMessage);
 
-                  InGameChat.Add (Format ('%d%s', [time_cnt, buff256]));
+                  InGameChat.Add(Format('%d%s', [time_cnt, buff256]));
                 end;
               end;
             end;
@@ -1961,66 +1951,63 @@ begin
         $02:
           begin
             { Sync }
-            Read (time, SizeOf (time));
-            Inc (time_cnt, time); { time_cnt is in miliseconds }
-            Read (unknown, SizeOf (unknown));
+            ReadInt32(time);
+            Inc(time_cnt, time); { time_cnt is in miliseconds }
+            ReadInt32(unknown);
             if (unknown = 0) then
-              Seek (28, soFromCurrent);
-            Seek (12, soFromCurrent);
+              Seek(28);
+            Seek(12);
           end;
         $01:
           begin
             { Command }
-            Read (length, SizeOf (length));
-            Read (cmd, SizeOf (cmd));
-            Seek (-1, soFromCurrent);
+            ReadInt32(length);
+            ReadChar(cmd);
+            Seek(-1);
             case cmd of
               $0B:
                 begin
                   { player resign }
-                  Seek (1, soFromCurrent);
-                  Read (player_index, SizeOf (player_index));
-                  Read (player_number, SizeOf (player_number));
+                  Seek(1);
+                  ReadChar(player_index);
+                  ReadChar(player_number);
                   // if dropped len = 4, 16 otherwise (not a rule)
-                  Player := PlayerList.GetPlayerByIndex (player_index);
-                  if Assigned (Player) and (Player.ResignTime = 0) then
+                  Player := PlayerList.GetPlayerByIndex(player_index);
+                  if Assigned(Player) and (Player.ResignTime = 0) then
                   begin
                     Player.ResignTime := time_cnt;
                     ChatMessage := TChatMessage.Create;
                     ChatMessage.Time := Player.ResignTime;
-                    ChatMessage.Msg := Format (c_resigned, [Player.Name]);
-                    InGameChatMessages.Add (ChatMessage);
+                    ChatMessage.Msg := Format(c_resigned, [Player.Name]);
+                    InGameChatMessages.Add(ChatMessage);
 
-                    InGameChat.Add (Format ('%d@#0' + c_resigned, [Player.ResignTime, Player.Name]));
+                    InGameChat.Add(Format('%d@#0' + c_resigned, [Player.ResignTime, Player.Name]));
                   end;
-                  Seek (length - 3, soFromCurrent);
+                  Seek(length - 3);
                 end;
               $65:
                 begin
                   { researches }
-                  Seek (8, soFromCurrent);
-                  { player_id }
-                  Read (player_id, SizeOf (player_id));
-                  { research_id }
-                  Read (research_id, SizeOf (research_id));
-
-                  Player := PlayerList.GetPlayerByIndex (player_id);
+                  Seek(8);
+                  ReadWord(player_id);
+                  ReadWord(research_id);
+                  Player := PlayerList.GetPlayerByIndex(player_id);
 
                   case research_id of
                     101:
                       begin
                         { feudal time }
-                        if Assigned (Player) then
+                        if Assigned(Player) then
                           Player.FeudalTime := time_cnt + 130000; { + research time (2:10) }
                       end;
                     102:
                       begin
                         { castle time }
-                        if Assigned (Player) then
+                        if Assigned(Player) then
                         begin
                           if (Player.CivId = cPersians) then
                             { about 10% less, but calculated as 160s / 1.10 despite of -10% = 144s }
-                            Player.CastleTime := time_cnt + Round (160000 / 1.10)
+                            Player.CastleTime := time_cnt + Round(160000 / 1.10)
                           else
                             Player.CastleTime := time_cnt + 160000;
                         end;
@@ -2028,18 +2015,18 @@ begin
                     103:
                       begin
                         { imperial time }
-                        if Assigned (Player) then
+                        if Assigned(Player) then
                         begin
                           if (Player.CivId = cPersians) then
                             { about 15% less, but calculated as 190s / 1.15 despite of -15% = 161,5s }
-                            Player.ImperialTime := time_cnt + Round (190000 / 1.15)
+                            Player.ImperialTime := time_cnt + Round(190000 / 1.15)
                           else
                             Player.ImperialTime := time_cnt + 190000;
                         end;
                       end;
                   end;
 
-                  if Assigned (Player) then
+                  if Assigned(Player) then
                   begin
                     { remember this is the time player has just started to research the particular technology,
                       repetitious researching may occure,
@@ -2062,7 +2049,7 @@ begin
                       Res.Id := research_id;
                       Res.Time := time_cnt;
                       Res.PlayerId := player_id;
-                      Researches.Add (Res);
+                      Researches.Add(Res);
                     end else
                     begin
                       Res := Researches[idx] as TResearch;
@@ -2097,65 +2084,61 @@ begin
                       Researches.Insert (i + 1, Res);
                   end;
 }
-                  Seek (length - 12, soFromCurrent);
+                  Seek(length - 12);
                 end;
               $77:
                 begin
                   { training unit }
-                  Seek (4, soFromCurrent);
-                  { object_id (building_id) }
-                  Read (object_id, SizeOf (object_id));
-                  { unit_type_id }
-                  Read (unit_type_id, SizeOf (unit_type_id));
-                  { unit_num (num_unit) }
-                  Read (unit_num, SizeOf (unit_num));
+                  Seek(4);
+                  ReadInt32(object_id);
+                  ReadWord(unit_type_id);
+                  ReadWord(unit_num);
 
-                  TrainedUnit := Units.GetUnit (unit_type_id);
-                  if Assigned (TrainedUnit) then
-                    Inc (TrainedUnit.Count, unit_num)
+                  TrainedUnit := Units.GetUnit(unit_type_id);
+                  if Assigned(TrainedUnit) then
+                    Inc(TrainedUnit.Count, unit_num)
                   else
                   begin
                     TrainedUnit := TTrainedUnit.Create;
                     TrainedUnit.Id := unit_type_id;
                     TrainedUnit.Count := unit_num;
-                    Units.Add (TrainedUnit);
+                    Units.Add(TrainedUnit);
                   end;
-                  Seek (length - 12, soFromCurrent);
+                  Seek(length - 12);
                 end;
               $64:
                 begin
                   { pc trains unit }
-                  Seek (10, soFromCurrent);
-                  { unit_type_id }
-                  Read (unit_type_id, SizeOf (unit_type_id));
+                  Seek(10);
+                  ReadWord(unit_type_id);
 
-                  TrainedUnit := Units.GetUnit (unit_type_id);
-                  if Assigned (TrainedUnit) then
-                    Inc (TrainedUnit.Count)
+                  TrainedUnit := Units.GetUnit(unit_type_id);
+                  if Assigned(TrainedUnit) then
+                    Inc(TrainedUnit.Count)
                   else
                   begin
                     TrainedUnit := TTrainedUnit.Create;
                     TrainedUnit.Id := unit_type_id;
                     TrainedUnit.Count := 1;
-                    Units.Add (TrainedUnit);
+                    Units.Add(TrainedUnit);
                   end;
-                  Seek (length - 12, soFromCurrent);
+                  Seek(length - 12);
                 end;
               $66:
                 begin
-                  Seek (2, soFromCurrent);
+                  Seek(2);
                   { player_id }
-                  Read (player_id, SizeOf (player_id));
-                  Seek (8, soFromCurrent);
+                  ReadWord(player_id);
+                  Seek(8);
                   { building_type_id unit_type_id }
-                  Read (building_type_id, SizeOf (building_type_id));
+                  ReadWord(building_type_id);
                   
-                  Player := PlayerList.GetPlayerByIndex (player_id);
-                  if Assigned (Player) then
+                  Player := PlayerList.GetPlayerByIndex(player_id);
+                  if Assigned(Player) then
                   begin
-                    Building := Player.Buildings.GetBuilding (building_type_id);
-                    if Assigned (Building) then
-                      Inc (Building.Count)
+                    Building := Player.Buildings.GetBuilding(building_type_id);
+                    if Assigned(Building) then
+                      Inc(Building.Count)
                     else
                     begin
                       Building := TBuilding.Create;
@@ -2164,50 +2147,50 @@ begin
                       else
                         Building.Id := biGate;
                       Building.Count := 1;
-                      Player.Buildings.Add (Building);
+                      Player.Buildings.Add(Building);
                     end;
                   end;
-                  Seek (length - 14, soFromCurrent);
+                  Seek(length - 14);
                 end;
               $6C:
                 begin
                   { tributing }
-                  Seek (1, soFromCurrent);
-                  Read (player_id_from, SizeOf (player_id_from));
-                  Read (player_id_to, SizeOf (player_id_to));
-                  Read (resource_id, SizeOf (resource_id));
-                  Read (amount_tributed, SizeOf (amount_tributed));
-                  Read (market_fee, SizeOf (market_fee));
-                  PlayerFrom := PlayerList.GetPlayerByIndex (player_id_from);
-                  PlayerTo   := PlayerList.GetPlayerByIndex (player_id_to);
-                  if Assigned (PlayerFrom) and Assigned (PlayerTo) then
+                  Seek(1);
+                  ReadChar(player_id_from);
+                  ReadChar(player_id_to);
+                  ReadChar(resource_id);
+                  ReadFloat(amount_tributed);
+                  ReadFloat(market_fee);
+                  PlayerFrom := PlayerList.GetPlayerByIndex(player_id_from);
+                  PlayerTo   := PlayerList.GetPlayerByIndex(player_id_to);
+                  if Assigned(PlayerFrom) and Assigned(PlayerTo) then
                   begin
                     Tribute := TTribute.Create;
                     Tribute.Time       := time_cnt;
                     Tribute.PlayerFrom := PlayerFrom;
                     Tribute.PlayerTo   := PlayerTo;
                     Tribute.ResourceId := TResourceId(resource_id);
-                    Tribute.Amount     := Floor (amount_tributed);
+                    Tribute.Amount     := Floor(amount_tributed);
                     Tribute.Fee        := market_fee;
-                    Tributes.Add (Tribute);
+                    Tributes.Add(Tribute);
                   end;
-                  Seek (length - 12, soFromCurrent);
+                  Seek(length - 12);
                 end;
               $03, $78, $00:
                 begin
-                  Seek (length, soFromCurrent);
+                  Seek(length);
                 end;
               else
                 begin
-                  Seek (length, soFromCurrent);
+                  Seek(length);
                 end;
             end;
-            Seek (4, soFromCurrent);
+            Seek(4);
           end;
         else
           begin
             { shouldn't occure, just to prevent unexpected endless cycling }
-            Seek (1, soFromCurrent);
+            Seek(1);
           end;
       end;
     end;  { endwhile }
@@ -2224,7 +2207,6 @@ begin
   { TODO: aby som nevolal dvakrat analyze? }
   Result := False;
   StartTime := GetTickCount;
-
   try
     try
       if not ExtractStreams then
@@ -2379,7 +2361,7 @@ begin
             Bmp.Canvas.FillRect (Rect (UO.Position.X - 1, UO.Position.Y - 1,
               UO.Position.X + 2, UO.Position.Y + 2));
           end;
-        uiForageBush, uiDeer, uiBoar, uiJavelina:
+        uiForageBush, uiDeer, uiBoar, uiJavelina, uiTurkey, uiSheep:
           begin
             Bmp.Canvas.Brush.Color := FOOD_COLOR;
             Bmp.Canvas.Pen.Color := FOOD_COLOR;
@@ -2907,7 +2889,7 @@ begin
   end;
 end;
 
-function TRecAnalyst.ReadPlayerInfoBlockEx(const num_player: Byte): Boolean;
+function TRecAnalyst.ReadPlayerInfoBlockEx: Boolean;
 const
   exist_object_separator: array[0..8] of Char = (
     #$0B, #$00, #$08, #$00, #$00, #$00, #$02, #$00, #$00);
@@ -2923,7 +2905,7 @@ const
     #$00, #$0B, #$00, #$40, #$00, #$00, #$00, #$20, #$00, #$00);
 var
   i, j: Integer;
-  exist_object_pos: LongInt;
+  exist_object_pos: Longint;
   buff256: array[0..255] of Char;
   object_type{$IFNDEF LIB}, prev_object_type{$ENDIF}: Byte;
   unit_id{$IFNDEF LIB}, prev_unit_id{$ENDIF}: Word;
@@ -2938,8 +2920,13 @@ var
   UO: TUnitObject;
   separator_ptr: Pointer;
   separator_len: Integer;
+  num_player: Byte;
+  map_size_x, map_size_y: Longint;
 begin
   Result := False;
+  num_player := Byte(Queue.Pop);
+  map_size_x := Longint(Queue.Pop);
+  map_size_y := Longint(Queue.Pop);
   try
     with FHeaderStream do
     begin
@@ -2950,9 +2937,9 @@ begin
           { skip GAIA player }
           Player := PlayerList[i - 1];
           { skip cooping player, she/he has no data in Player_info }
-          P := PlayerList.GetPlayerByIndex (Player.Index);
+          P := PlayerList.GetPlayerByIndex(Player.Index);
 
-          if (Assigned (P)) and (P <> Player) and (P.CivId <> cNone) then
+          if (Assigned(P)) and (P <> Player) and (P.CivId <> cNone) then
           begin
             Player.CivId := P.CivId;
             Player.Civ := P.Civ;
@@ -2962,95 +2949,94 @@ begin
             Player.IsCooping := True;
             Continue;
           end;
-          Seek (num_player, soFromCurrent);
-          Seek (43, soFromCurrent);
           if (FGameVersion = gvAOKTrial) or (FGameVersion = gvAOCTrial) then
-            Seek (4, soFromCurrent);
+            Seek(4);
+          Seek(num_player + 43);
 
-          Read (player_name_len, SizeOf (player_name_len));
-          Seek (player_name_len, soFromCurrent); { skip player name }
-          Seek (6, soFromCurrent);
+          { skip player name }
+          ReadWord(player_name_len);
+          Seek(player_name_len + 6);
 
+          Queue.Push(Pointer(Position));
           { Civ_header }
-          Read (food, SizeOf (food));
-          Read (wood, SizeOf (wood));
-          Read (stone, SizeOf (stone));
-          Read (gold, SizeOf (gold));
+          ReadFloat(food);
+          ReadFloat(wood);
+          ReadFloat(stone);
+          ReadFloat(gold);
           { headroom = (house capacity - population) }
-          Read (headroom, SizeOf (headroom));
-          Seek (4, soFromCurrent);
+          ReadFloat(headroom);
+          Seek(4);
           { Starting Age, note: PostImperial Age = Imperial Age here }
-          Read (data6, SizeOf (data6));
-          Seek (16, soFromCurrent);
-          Read (population, SizeOf (population));
-          Seek (100, soFromCurrent);
-          Read (civilian_pop, SizeOf (civilian_pop));
-          Seek (8, soFromCurrent);
-          Read (military_pop, SizeOf (military_pop));
-
-          if FIsMgx then
-            Seek (629, soFromCurrent)
-          else
-            Seek (593, soFromCurrent);
-
-          Read (init_camera_pos_x, SizeOf (init_camera_pos_x));
-          Read (init_camera_pos_y, SizeOf (init_camera_pos_y));
-
-          if FIsMgx then
-            Seek (9, soFromCurrent)
-          else
-            Seek (5, soFromCurrent);
-          { civilization }
-          Read (civilization, SizeOf (civilization));
+          ReadFloat(data6);
+          Seek(16);
+          ReadFloat(population);
+          Seek(100);
+          ReadFloat(civilian_pop);
+          Seek(8);
+          ReadFloat(military_pop);
+          if FIsMgx then Seek(629) else Seek(593);
+          ReadFloat(init_camera_pos_x);
+          ReadFloat(init_camera_pos_y);
+          if FIsMgx then Seek(9) else Seek(5);
+          ReadChar(civilization);
           { sometimes(?) civilization is zero in scenarios when the first player is briton (only? always? rule?) }
           if (civilization = 0) then
-            Inc (civilization);
+            Inc(civilization);
           { skip unknown9[3] }
-          Seek (3, soFromCurrent);
-          { player_color }
-          Read (player_color, SizeOf (player_color));
+          Seek(3);
+          ReadChar(player_color);
 
           with Player do
           begin
             CivId := TCivilization(civilization);
-            SetCiv (TCivilization(civilization));
+            SetCiv(TCivilization(civilization));
             ColorId := player_color;
-            {$IFDEF EXTENDED}SetColor (player_color);{$ENDIF}
-            InitialState.Position.X := Round (init_camera_pos_x);
-            InitialState.Position.Y := Round (init_camera_pos_y);
-            InitialState.Food := Round (food);
-            InitialState.Wood := Round (wood);
-            InitialState.Stone := Round (stone);
-            InitialState.Gold := Round (gold);
-            InitialState.StartingAge := TStartingAge (Round (data6));
+            {$IFDEF EXTENDED}SetColor(player_color);{$ENDIF}
+            InitialState.Position.X := Round(init_camera_pos_x);
+            InitialState.Position.Y := Round(init_camera_pos_y);
+            InitialState.Food := Round(food);
+            InitialState.Wood := Round(wood);
+            InitialState.Stone := Round(stone);
+            InitialState.Gold := Round(gold);
+            InitialState.StartingAge := TStartingAge(Round(data6));
             // TODO: Huns, Goths, Nomad etc. var...
-            InitialState.HouseCapacity := Round (headroom) + Round (population);
-            InitialState.Population := Round (population);
-            InitialState.CivilianPop := Round (civilian_pop);
-            InitialState.MilitaryPop := Round (military_pop);
+            InitialState.HouseCapacity := Round(headroom) + Round(population);
+            InitialState.Population := Round(population);
+            InitialState.CivilianPop := Round(civilian_pop);
+            InitialState.MilitaryPop := Round(military_pop);
             InitialState.ExtraPop := InitialState.Population - (InitialState.CivilianPop + InitialState.MilitaryPop);
           end;
-
-          Seek (4299, soFromCurrent);  { TODO: more testing for mgl files would be desirable here }
         end;
+
+        if (i = 0) then
+        begin
+          { GAIA }
+          if (FGameVersion = gvAOKTrial) or (FGameVersion = gvAOCTrial) then
+            Seek(4);
+          Seek(num_player + 70);
+          if FIsMgx then Seek(792) else Seek(756);
+        end;
+
+        if FIsMgx then Seek(41249) else Seek(34277);
+        Seek(map_size_x * map_size_y);
 
         { Getting exist_object_pos }
         exist_object_pos := 0;
         repeat
-          Read (buff256, SizeOf (exist_object_separator));
-          if CompareMem (@buff256, @exist_object_separator, SizeOf (exist_object_separator)) then
+          ReadBuffer(buff256, SizeOf(exist_object_separator));
+          if CompareMem(@buff256, @exist_object_separator, SizeOf(exist_object_separator)) then
           begin
             exist_object_pos := Position;
             Break;
           end;
-          Seek (-SizeOf (exist_object_separator) + 1, soFromCurrent);
+          Seek(-SizeOf(exist_object_separator) + 1);
         until (Position >= Size);
 
         if (exist_object_pos = 0) then
         begin
           {$IFNDEF LIB}
           { we don't raise exception here }
-          Logger.SendError ('Exist_Object block has not been found.', True);
+          Logger.SendError('Exist_Object block has not been found.', True);
           {$ENDIF}
           Exit;
         end;
@@ -3062,123 +3048,123 @@ begin
           prev_unit_id := unit_id;
           {$ENDIF}
 
-          Read (object_type, SizeOf (object_type));
-          Read (owner, SizeOf (owner));
-          Read (unit_id, SizeOf (unit_id));
+          ReadChar(object_type);
+          ReadChar(owner);
+          ReadWord(unit_id);
           case object_type of
             10:
               begin
                 case unit_id of
                   uiGoldMine, uiStoneMine, uiCliff1..uiCliff10, uiForageBush:
                     begin
-                      Seek (19, soFromCurrent);
-                      Read (pos_x, SizeOf (pos_x));
-                      Read (pos_y, SizeOf (pos_y));
+                      Seek(19);
+                      ReadFloat(pos_x);
+                      ReadFloat(pos_y);
                       GO := TGaiaObject.Create;
                       GO.Id := unit_id;
-                      GO.Position.X := Round (pos_x);
-                      GO.Position.Y := Round (pos_y);
-                      GaiaObjects.Add (GO);
-                      Seek (- 19 - SizeOf (pos_x) - SizeOf (pos_y), soFromCurrent);
+                      GO.Position.X := Round(pos_x);
+                      GO.Position.Y := Round(pos_y);
+                      GaiaObjects.Add(GO);
+                      Seek(- 19 - SizeOf(pos_x) - SizeOf(pos_y));
                     end;
                 end;
-                Seek (63 - SizeOf (object_type) - SizeOf (owner) - SizeOf (unit_id), soFromCurrent);
+                Seek(63 - SizeOf(object_type) - SizeOf(owner) - SizeOf(unit_id));
                 if FIsMgl then
-                  Seek (1, soFromCurrent);
+                  Seek(1);
               end;
             20:
               begin
                 // not guaranteed
                 if FIsMgx then
                 begin
-                  Seek (59, soFromCurrent);
-                  Read (b, SizeOf (b));
-                  Seek (-59 - SizeOf (b), soFromCurrent);
-                  Seek (68 - SizeOf (object_type) - SizeOf (owner) - SizeOf (unit_id), soFromCurrent);
+                  Seek(59);
+                  ReadChar(b);
+                  Seek(-59 - SizeOf(b));
+                  Seek(68 - SizeOf(object_type) - SizeOf(owner) - SizeOf(unit_id));
                   if (b = 2) then
-                    Seek(34, soFromCurrent);
+                    Seek(34);
                 end else
-                  Seek (103 - SizeOf (object_type) - SizeOf (owner) - SizeOf (unit_id), soFromCurrent)
+                  Seek(103 - SizeOf(object_type) - SizeOf(owner) - SizeOf(unit_id))
               end;
             30:
               begin
                 if FIsMgx then
                 begin
-                  Seek (59, soFromCurrent);
-                  Read (b, SizeOf (b));
-                  Seek (-59 - SizeOf (b), soFromCurrent);
-                  Seek (204 - SizeOf (object_type) - SizeOf (owner) - SizeOf (unit_id), soFromCurrent);
+                  Seek(59);
+                  ReadChar(b);
+                  Seek(-59 - SizeOf(b));
+                  Seek(204 - SizeOf(object_type) - SizeOf(owner) - SizeOf(unit_id));
                   if (b = 2) then
-                    Seek(17, soFromCurrent);
+                    Seek(17);
                 end else
                 begin
-                  Seek (60, soFromCurrent);
-                  Read (b, SizeOf (b));
-                  Seek (-60 - SizeOf (b), soFromCurrent);
-                  Seek (205 - SizeOf (object_type) - SizeOf (owner) - SizeOf (unit_id), soFromCurrent);
+                  Seek(60);
+                  ReadChar(b);
+                  Seek(-60 - SizeOf(b));
+                  Seek(205 - SizeOf(object_type) - SizeOf(owner) - SizeOf(unit_id));
                   if (b = 2) then
-                    Seek(17, soFromCurrent);
+                    Seek(17);
                 end;
              end;
             60:
               begin
                 // not guaranteed
-                Seek (204, soFromCurrent);
-                Read (b, SizeOf (b));
-                Seek (-204 - SizeOf (b), soFromCurrent);
-                Seek (233 - SizeOf (object_type) - SizeOf (owner) - SizeOf (unit_id), soFromCurrent);
+                Seek(204);
+                ReadChar(b);
+                Seek(-204 - SizeOf(b));
+                Seek(233 - SizeOf(object_type) - SizeOf(owner) - SizeOf(unit_id));
                 if (b <> 0) then
-                  Seek(67, soFromCurrent);
+                  Seek(67);
               end;
             70:
               begin
                 case unit_id of
-                  uiRelic, uiDeer, uiBoar, uiJavelina:
+                  uiRelic, uiDeer, uiBoar, uiJavelina, uiTurkey, uiSheep:
                     begin
-                      Seek (19, soFromCurrent);
-                      Read (pos_x, SizeOf (pos_x));
-                      Read (pos_y, SizeOf (pos_y));
+                      Seek(19);
+                      ReadFloat(pos_x);
+                      ReadFloat(pos_y);
                       GO := TGaiaObject.Create;
                       GO.Id := unit_id;
-                      GO.Position.X := Round (pos_x);
-                      GO.Position.Y := Round (pos_y);
-                      GaiaObjects.Add (GO);
+                      GO.Position.X := Round(pos_x);
+                      GO.Position.Y := Round(pos_y);
+                      GaiaObjects.Add(GO);
                     end;
                 end;
                 if (owner <> 0) and (unit_id <> uiTurkey) and (unit_id <> uiSheep) then
                 begin
                   { exclude convertable objects }
-                  Seek (19, soFromCurrent);
-                  Read (pos_x, SizeOf (pos_x));
-                  Read (pos_y, SizeOf (pos_y));
+                  Seek(19);
+                  ReadFloat(pos_x);
+                  ReadFloat(pos_y);
                   UO := TUnitObject.Create;
                   UO.Id := unit_id;
                   UO.Owner := owner;
-                  UO.Position.X := Round (pos_x);
-                  UO.Position.Y := Round (pos_y);
-                  PlayerObjects.Add (UO);
+                  UO.Position.X := Round(pos_x);
+                  UO.Position.Y := Round(pos_y);
+                  PlayerObjects.Add(UO);
                 end;
                 if FIsMgx then
                 begin
                   separator_ptr := @object_end_separator;
-                  separator_len := SizeOf (object_end_separator);
+                  separator_len := SizeOf(object_end_separator);
                 end else
                 begin
                   separator_ptr := @aok_object_end_separator;
-                  separator_len := SizeOf (aok_object_end_separator);
+                  separator_len := SizeOf(aok_object_end_separator);
                 end;
                 { search up to 1000 bytes }
                 for j := 0 to 1000 do
                 begin
-                  Read (buff256, separator_len);
-                  if CompareMem (@buff256, separator_ptr, separator_len) then
+                  ReadBuffer(buff256, separator_len);
+                  if CompareMem(@buff256, separator_ptr, separator_len) then
                     Break;
-                  Seek (-separator_len + 1, soFromCurrent);
+                  Seek(-separator_len + 1);
                 end;
                 if (j > 1000) then
                 begin
                   {$IFNDEF LIB}
-                  Logger.SendError ('object_end_separator has not been found for object_type=%d, owner=%d',
+                  Logger.SendError('object_end_separator has not been found for object_type=%d, owner=%d',
                     [object_type, owner], True);
                   {$ENDIF}
                   Exit;
@@ -3188,63 +3174,63 @@ begin
               begin
                 if (owner <> 0) then
                 begin
-                  Seek (19, soFromCurrent);
-                  Read (pos_x, SizeOf (pos_x));
-                  Read (pos_y, SizeOf (pos_y));
+                  Seek(19);
+                  ReadFloat(pos_x);
+                  ReadFloat(pos_y);
                   UO := TUnitObject.Create;
                   UO.Id := unit_id;
                   UO.Owner := owner;
-                  UO.Position.X := Round (pos_x);
-                  UO.Position.Y := Round (pos_y);
-                  PlayerObjects.Add (UO);
+                  UO.Position.X := Round(pos_x);
+                  UO.Position.Y := Round(pos_y);
+                  PlayerObjects.Add(UO);
                 end;
                 if FIsMgx then
                 begin
                   separator_ptr := @object_end_separator;
-                  separator_len := SizeOf (object_end_separator);
+                  separator_len := SizeOf(object_end_separator);
                 end else
                 begin
                   separator_ptr := @aok_object_end_separator;
-                  separator_len := SizeOf (aok_object_end_separator);
+                  separator_len := SizeOf(aok_object_end_separator);
                 end;
                 { search up to 1000 bytes }
                 for j := 0 to 1000 do
                 begin
-                  Read (buff256, separator_len);
-                  if CompareMem (@buff256, separator_ptr, separator_len) then
+                  ReadBuffer(buff256, separator_len);
+                  if CompareMem(@buff256, separator_ptr, separator_len) then
                     Break;
-                  Seek (-separator_len + 1, soFromCurrent);
+                  Seek(-separator_len + 1);
                 end;
                 if (j > 1000) then
                 begin
                   {$IFNDEF LIB}  
-                  Logger.SendError ('object_end_separator has not been found for object_type=%d, owner=%d',
+                  Logger.SendError('object_end_separator has not been found for object_type=%d, owner=%d',
                     [object_type, owner], True);
                   {$ENDIF}
                   Exit;
                 end;
-                Seek (126, soFromCurrent);
+                Seek(126);
                 if FIsMgx then
-                  Seek (1, soFromCurrent);
+                  Seek(1);
               end;
             00:
               begin
-                Seek (-(SizeOf (object_type) + SizeOf (owner) + SizeOf (unit_id)), soFromCurrent); // -4
+                Seek(-(SizeOf(object_type) + SizeOf(owner) + SizeOf(unit_id))); // -4
 
-                Read (buff256, SizeOf (player_info_end_separator));
-                Seek (-SizeOf (player_info_end_separator), soFromCurrent);
+                ReadBuffer(buff256, SizeOf(player_info_end_separator));
+                Seek(-SizeOf(player_info_end_separator));
 
-                if CompareMem (@buff256, @player_info_end_separator, SizeOf (player_info_end_separator)) then
+                if CompareMem(@buff256, @player_info_end_separator, SizeOf(player_info_end_separator)) then
                 begin
-                  Seek (SizeOf (player_info_end_separator), soFromCurrent);
+                  Seek(SizeOf(player_info_end_separator));
                   Break;
                 end;
-                if CompareMem (@buff256, @objects_mid_separator_gaia, 2) then
-                  Seek (SizeOf (objects_mid_separator_gaia), soFromCurrent)
+                if CompareMem(@buff256, @objects_mid_separator_gaia, 2) then
+                  Seek(SizeOf(objects_mid_separator_gaia))
                 else
                 begin
                   {$IFNDEF LIB}
-                  Logger.SendError ('Incorrect data has been detected at %x: prev_object_type=%d, prev_unit_id=%d, owner=%d',
+                  Logger.SendError('Incorrect data has been detected at %x: prev_object_type=%d, prev_unit_id=%d, owner=%d',
                     [Position, prev_object_type, prev_unit_id, owner], True);
                   {$ENDIF}
                   Exit;
@@ -3254,7 +3240,7 @@ begin
             else
               begin
                 {$IFNDEF LIB}
-                Logger.SendError ('Incorrect data has been detected a %x: prev_object_type=%d, prev_unit_id=%d, owner=%d',
+                Logger.SendError('Incorrect data has been detected at %x: prev_object_type=%d, prev_unit_id=%d, owner=%d',
                   [Position, prev_object_type, prev_unit_id, owner], True);
                 {$ENDIF}
                 Exit;
