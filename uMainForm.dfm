@@ -20,8 +20,8 @@ object MainForm: TMainForm
   object MainPanel: TPanel
     Left = 0
     Top = 0
-    Width = 870
-    Height = 611
+    Width = 862
+    Height = 602
     Align = alClient
     BevelOuter = bvNone
     ParentBackground = False
@@ -80,7 +80,7 @@ object MainForm: TMainForm
             Height = 17
             Caption = 'Game Settings:'
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clActiveCaption
+            Font.Color = 13390596
             Font.Height = -12
             Font.Name = 'Lucida Blackletter'
             Font.Style = [fsBold]
@@ -281,7 +281,7 @@ object MainForm: TMainForm
             Height = 17
             Caption = 'Teams:'
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clActiveCaption
+            Font.Color = 13390596
             Font.Height = -12
             Font.Name = 'Lucida Blackletter'
             Font.Style = [fsBold]
@@ -591,7 +591,7 @@ object MainForm: TMainForm
             Height = 17
             Caption = 'Chat:'
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clActiveCaption
+            Font.Color = 13390596
             Font.Height = -12
             Font.Name = 'Lucida Blackletter'
             Font.Style = [fsBold]
@@ -621,10 +621,8 @@ object MainForm: TMainForm
             PrintOptions.Margins.Right = 19.050000000000000000
             PrintOptions.Margins.Top = 19.050000000000000000
             PrintOptions.Margins.Bottom = 19.050000000000000000
-            PrintOptions.Header = '&w&bPage &p of &P'
             PrintOptions.HTMLHeader.Strings = (
               '<HTML></HTML>')
-            PrintOptions.Footer = '&u&b&d'
             PrintOptions.Orientation = poPortrait
             VisualEffects.DisableSounds = True
             ControlData = {
@@ -665,7 +663,7 @@ object MainForm: TMainForm
             Height = 17
             Caption = 'Tributes:'
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clActiveCaption
+            Font.Color = 13390596
             Font.Height = -12
             Font.Name = 'Lucida Blackletter'
             Font.Style = [fsBold]
@@ -696,10 +694,8 @@ object MainForm: TMainForm
             PrintOptions.Margins.Right = 19.050000000000000000
             PrintOptions.Margins.Top = 19.050000000000000000
             PrintOptions.Margins.Bottom = 19.050000000000000000
-            PrintOptions.Header = '&w&bPage &p of &P'
             PrintOptions.HTMLHeader.Strings = (
               '<HTML></HTML>')
-            PrintOptions.Footer = '&u&b&d'
             PrintOptions.Orientation = poPortrait
             VisualEffects.DisableSounds = True
             ControlData = {
@@ -740,7 +736,7 @@ object MainForm: TMainForm
             Height = 17
             Caption = 'Researches:'
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clActiveCaption
+            Font.Color = 13390596
             Font.Height = -12
             Font.Name = 'Lucida Blackletter'
             Font.Style = [fsBold]
@@ -793,7 +789,7 @@ object MainForm: TMainForm
             Height = 17
             Caption = 'Extra stats:'
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clActiveCaption
+            Font.Color = 13390596
             Font.Height = -12
             Font.Name = 'Lucida Blackletter'
             Font.Style = [fsBold]
@@ -852,7 +848,7 @@ object MainForm: TMainForm
             Height = 17
             Caption = 'Scenario Information:'
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clActiveCaption
+            Font.Color = 13390596
             Font.Height = -12
             Font.Name = 'Lucida Blackletter'
             Font.Style = [fsBold]
@@ -1071,7 +1067,7 @@ object MainForm: TMainForm
             Height = 17
             Caption = 'Comment in recorded game:'
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clActiveCaption
+            Font.Color = 13390596
             Font.Height = -12
             Font.Name = 'Lucida Blackletter'
             Font.Style = [fsBold]
@@ -1231,7 +1227,7 @@ object MainForm: TMainForm
             Height = 17
             Caption = 'About:'
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clActiveCaption
+            Font.Color = 13390596
             Font.Height = -12
             Font.Name = 'Lucida Blackletter'
             Font.Style = [fsBold]
