@@ -735,6 +735,8 @@ var
   Msg: TLoggerMessage;
   UF: TUploadForm;
 begin
+  { clear logs from previous view if any exist }
+  Logger.MessageList.Clear;
   try
 //    ResetVCL;
     if (ExtractFileExt (FileName) = SCN_EXT) or
