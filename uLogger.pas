@@ -310,6 +310,7 @@ begin
   else
     LoggerMessage := FLoggerMessage;
 
+  LoggerMessage.TimeStamp   := Now;
   LoggerMessage.MessageType := MsgType;
   LoggerMessage.MessageText := Msg;
 
