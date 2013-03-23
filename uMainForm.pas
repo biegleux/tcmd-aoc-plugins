@@ -1,230 +1,182 @@
-(*
+﻿{*
  * $Id$
  * This file is part of the A2LView project.
  *
- * Copyright (c) 2009-2010 biegleux <biegleux[at]gmail[dot]com>
+ * Copyright (c) 2009-2013 biegleux <biegleux[at]gmail[dot]com>
  *
- * This program is free software; you can redistribute it and/or modify
+ * This plugin is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This plugin is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, see <http://www.gnu.org/licenses>.
- *)
+ * along with this plugin; if not, see <http://www.gnu.org/licenses>.
+ *}
 unit uMainForm;
 
 interface
 
 uses
-  Windows, ImgList, Controls, Menus, StdCtrls, ExtCtrls, OleCtrls,
-  SHDocVw_EWB, EwbCore, EmbeddedWB, JvExControls, JvLabel, Forms, ComCtrls,
-  Classes, Messages, Contnrs, SysUtils, Graphics,
-  TeamsVCL, RecAnalyst, ScAnalyst;
+  Winapi.Windows, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.Controls, System.Classes,
+  Vcl.Forms, System.SysUtils, Winapi.Messages, System.Contnrs,
+  RecAnalystWrap;
 
 type
-  TStaticText = class(StdCtrls.TStaticText)
-  private
-    FOnMouseLeave: TNotifyEvent;
-    TrackingMouse: Boolean;
-    procedure TrackMouse;
-    procedure WMMouseLeave(var Message: TMessage); message WM_MOUSELEAVE;
-    procedure WMMouseMove(var Message: TWMMouseMove); message WM_MOUSEMOVE;
-  public
-    property OnMouseLeave: TNotifyEvent read FOnMouseLeave write FOnMouseLeave;
-  end;
-
   TMainForm = class(TForm)
-    MapPopupMenu: TPopupMenu;
-    SaveMapAs: TMenuItem;
-    ChatPopupMenu: TPopupMenu;
-    SaveasHTML: TMenuItem;
-    ImageList: TImageList;
     MainPanel: TPanel;
     PageControl: TPageControl;
     GeneralTabSheet: TTabSheet;
-    GeneralScrollBox: TScrollBox;
-    GeneralPaintBox: TPaintBox;
-    GSLabel: TJvLabel;
-    JvLabel1: TJvLabel;
-    JvLabel2: TJvLabel;
-    JvLabel3: TJvLabel;
-    JvLabel4: TJvLabel;
-    JvLabel5: TJvLabel;
-    JvLabel6: TJvLabel;
-    JvLabel7: TJvLabel;
-    JvLabel8: TJvLabel;
-    JvLabel9: TJvLabel;
-    JvLabel10: TJvLabel;
-    JvLabel11: TJvLabel;
-    POVLabel: TLabel;
-    TeamsLabel: TJvLabel;
-    MapPaintBox: TPaintBox;
+    GameSettingsGroupBox: TGroupBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    GameTypeLabel: TLabel;
+    MapLabel: TLabel;
     PlayersLabel: TLabel;
     DurationLabel: TLabel;
-    DifficultyLabel: TLabel;
-    PopulationLabel: TLabel;
-    MapSizeLabel: TLabel;
-    SpeedLabel: TLabel;
-    LockDiplomacyLabel: TLabel;
-    LocationLabel: TLabel;
+    POVLabel: TLabel;
+    VersionLabel: TLabel;
+    DetailsLabel: TLabel;
+    DetailsPanel: TPanel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
     MapStyleLabel: TLabel;
-    GameTypeLabel: TLabel;
-    JvLabel13: TJvLabel;
-    ScenarioFileLabel: TLabel;
-    JvLabel14: TJvLabel;
-    JvLabel15: TJvLabel;
+    MapSizeLabel: TLabel;
     RevealMapLabel: TLabel;
-    GameVersionLabel: TLabel;
-    JvLabel12: TJvLabel;
     VictoryLabel: TLabel;
+    SpeedLabel: TLabel;
+    PopulationLabel: TLabel;
+    DifficultyLabel: TLabel;
+    TeamsGroupBox: TGroupBox;
+    Panel1: TPanel;
+    Image1: TImage;
+    Label14: TLabel;
+    Label15: TLabel;
+    Panel2: TPanel;
+    Image2: TImage;
+    Label16: TLabel;
+    Label17: TLabel;
+    Panel3: TPanel;
+    Image3: TImage;
+    Label18: TLabel;
+    Label19: TLabel;
+    Panel4: TPanel;
+    Image4: TImage;
+    Label20: TLabel;
+    Label21: TLabel;
+    Panel5: TPanel;
+    Image5: TImage;
+    Label22: TLabel;
+    Label23: TLabel;
+    Panel6: TPanel;
+    Image6: TImage;
+    Label24: TLabel;
+    Label25: TLabel;
+    Panel7: TPanel;
+    Image7: TImage;
+    Label26: TLabel;
+    Label27: TLabel;
+    Panel8: TPanel;
+    Image8: TImage;
+    Label28: TLabel;
+    Label29: TLabel;
+    Panel9: TPanel;
+    Image9: TImage;
+    Label30: TLabel;
+    Label31: TLabel;
+    Panel10: TPanel;
+    Image10: TImage;
+    Label32: TLabel;
+    Label33: TLabel;
+    Panel11: TPanel;
+    Image11: TImage;
+    Label34: TLabel;
+    Label35: TLabel;
+    Panel12: TPanel;
+    Image12: TImage;
+    Label36: TLabel;
+    Label37: TLabel;
+    Panel13: TPanel;
+    Image13: TImage;
+    Label38: TLabel;
+    Label39: TLabel;
+    Panel14: TPanel;
+    Image14: TImage;
+    Label40: TLabel;
+    Label41: TLabel;
+    Panel15: TPanel;
+    Image15: TImage;
+    Label42: TLabel;
+    Label43: TLabel;
+    Panel16: TPanel;
+    Image16: TImage;
+    Label44: TLabel;
+    Label45: TLabel;
     ChatTabSheet: TTabSheet;
-    ChatScrollBox: TScrollBox;
-    ChatPaintBox: TPaintBox;
-    ChatLabel: TJvLabel;
-    ChatWB: TEmbeddedWB;
-    TributesTabSheet: TTabSheet;
-    TributesScrollBox: TScrollBox;
-    TributingPaintBox: TPaintBox;
-    TributingLabel: TJvLabel;
-    TributesWB: TEmbeddedWB;
+    ChatRichEdit: TRichEdit;
     ResearchesTabSheet: TTabSheet;
-    ResearchesScrollBox: TScrollBox;
-    ResearchesPaintBox: TPaintBox;
-    ResearchesLabel: TJvLabel;
-    ResPaintBox: TPaintBox;
-    ExtraStatsTabSheet: TTabSheet;
-    ExtraStatsScrollBox: TScrollBox;
-    ExtraStatsPaintBox: TPaintBox;
-    ESLabel: TJvLabel;
-    UnitsPaintBox: TPaintBox;
-    BuildingsPaintBox: TPaintBox;
-    ScenarioInfoTabSheet: TTabSheet;
-    ScenarioPaintBox: TPaintBox;
-    SILabel: TJvLabel;
-    ScBgPaintBox: TPaintBox;
-    BtnPaintBox1: TPaintBox;
-    BtnPaintBox2: TPaintBox;
-    BtnPaintBox3: TPaintBox;
-    BtnPaintBox4: TPaintBox;
-    JvLabel17: TJvLabel;
-    JvLabel18: TJvLabel;
-    JvLabel20: TJvLabel;
-    JvLabel19: TJvLabel;
-    HeaderLabel: TJvLabel;
-    ScenarioMapPaintBox: TPaintBox;
-    ScContentLabel: TLabel;
-    AboutTabSheet: TTabSheet;
-    AboutScrollBox: TScrollBox;
-    AboutPaintBox: TPaintBox;
-    APaintBox: TPaintBox;
-    JvLabel16: TJvLabel;
-    AboutLabel: TJvLabel;
-    AboutContentLabel: TLabel;
-    CopyrightLabel: TLabel;
-    Label3: TLabel;
-    PluginURLLabel: TLabel;
-    PluginInfoLabel: TLabel;
-    OSPaintBox: TPaintBox;
-    CommentTabSheet: TTabSheet;
-    CommentPaintBox: TPaintBox;
-    CommentMemo: TMemo;
-    CheckBox1PaintBox: TPaintBox;
-    CheckBox2PaintBox: TPaintBox;
-    UpdateBtnPaintBox: TPaintBox;
-    UpdateLabel: TLabel;
-    CBLabel: TLabel;
-    ACLabel: TLabel;
-    CLabel: TJvLabel;
-    MemoShape: TShape;
+    MapImage: TImage;
+    ResearchesGroupBox: TGroupBox;
+    ScrollBox: TScrollBox;
+    ResearchesImage: TImage;
+    PlayersPanel: TPanel;
+    Label46: TLabel;
+    Label47: TLabel;
+    Label48: TLabel;
+    Label49: TLabel;
+    Label50: TLabel;
+    Label51: TLabel;
+    Label52: TLabel;
+    Label53: TLabel;
+    Label54: TLabel;
+    ViewResultsLabel: TLabel;
+    procedure DetailsLabelClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure GeneralPaintBoxPaint(Sender: TObject);
-    procedure MapPaintBoxPaint(Sender: TObject);
-    procedure SaveMapAsClick(Sender: TObject);
-    procedure BuildingsPaintBoxPaint(Sender: TObject);
-    procedure UnitsPaintBoxPaint(Sender: TObject);
-    procedure SaveasHTMLClick(Sender: TObject);
-    procedure ResPaintBoxPaint(Sender: TObject);
-    procedure ScBgPaintBoxPaint(Sender: TObject);
-    procedure BtnPaintBox1Paint(Sender: TObject);
-    procedure JvLabel19Click(Sender: TObject);
-    procedure BtnPaintBox1Click(Sender: TObject);
-    procedure PluginURLLabelClick(Sender: TObject);
-    procedure OSPaintBoxPaint(Sender: TObject);
-    procedure OSPaintBoxClick(Sender: TObject);
-    procedure FormActivate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
+    procedure PageControlChange(Sender: TObject);
+    procedure ScrollBoxResize(Sender: TObject);
+    procedure ResearchesImageMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
-    procedure ResPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
-    procedure CheckBox1PaintBoxClick(Sender: TObject);
-    procedure CheckBox1PaintBoxPaint(Sender: TObject);
-    procedure CheckBox2PaintBoxClick(Sender: TObject);
-    procedure CheckBox2PaintBoxPaint(Sender: TObject);
-    procedure UpdateBtnPaintBoxClick(Sender: TObject);
-    procedure UpdateBtnPaintBoxMouseDown(Sender: TObject;
-      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    procedure UpdateBtnPaintBoxMouseUp(Sender: TObject;
-      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    procedure UpdateBtnPaintBoxPaint(Sender: TObject);
+    procedure ResearchesTabSheetResize(Sender: TObject);
+    procedure ViewResultsLabelClick(Sender: TObject);
   private
     TotCmdWin: HWND;     { handle of TC window }
     ParentWin: HWND;     { handle of Lister window }
     QuickView: Boolean;  { Ctrl+Q panel }
-
-    BkgBitmap: TBitmap;
-    MapBitmap: TBitmap;
-    UnitsBitmap: TBitmap;
-    BuildingsBitmap: TBitmap;
-    ResearchesBitmap: TBitmap;
-    BkgWinBitmap: TBitmap;
-    TabDownBitmap, TabUpBitmap: TBitmap;
-    OSBitmap: TBitmap;
-    BtnDownBitmap, BtnUpBitmap: TBitmap;
-    CheckedBitmap, UncheckedBitmap: TBitmap;
-    TeamsVCL: TTeamsVCL;
-    RecAnalyst: TRecAnalyst;
-    ScAnalyst: TScAnalyst;
-    ImageMap: TObjectList;
-
-    ObjectivesLabel: TStaticText;
-
     FileName: String;
-
-    AddCommentB: Boolean;
-    CreateBackupB: Boolean;
-    UpdateDown: Boolean;
-
-    procedure UpdateGameSettingsVCL;
-    procedure UpdateGameChatVCL;
-    procedure UpdateTributingVCL;
-    procedure UpdateUnitsVCL;
-    procedure UpdateBuildingsVCL;
-    procedure UpdateMapVCL;
-    procedure UpdateResearchesVCL;
-    procedure UpdateScenarioVCL;
-    procedure UpdateCommentVCL;
-
-    procedure ResetVCL;
-    procedure LoadFile;
-
-    procedure TrackMouse;
-    procedure WMMouseLeave(var msg: TMessage); message WM_MOUSELEAVE;
+    RecAnalyst: TRecAnalyst;
+    ImageMap: TObjectList;
+    procedure LoadFile();
     procedure AppException(Sender: TObject; E: Exception);
+
+    procedure CollapseDetails();
+    procedure ExpandDetails();
+    procedure ToggleDetails();
+    procedure FillGameSettings();
+    procedure FillPlayers();
+    procedure FillChat();
+    procedure FillResearches();
+    procedure FillPanel(Panel: TPanel);
+    function GetSortedMessages(): TObjectList;
+    class function HintString(Player: TPlayer): String;
+    procedure GenerateResearches();
   protected
     procedure CreateParams(var Params: TCreateParams); override;
   public
-    TrackingMouse: Boolean;
-    constructor CreateParented(ParentWindow: HWND; const FileToView: string); reintroduce;
-    procedure OLabelMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-    procedure OLabelMouseLeave(Sender: TObject);
+    constructor CreateParented(ParentWindow: HWND; const FileToView: String); reintroduce;
   end;
 
 function ShowAoE2(ListerWin: HWND; const FileToLoad: String; ShowFlags: Integer): HWND;
@@ -233,11 +185,10 @@ procedure HideAoE2(PluginWin: HWND);
 implementation
 
 {$R *.dfm}
-{$R winxp.res}
 
 uses
-  uHintForm, TransparentScrollBox, Context, CommCtrl, RecAnalystConsts, BitmapEx,
-  ExtDlgs, pngimage, Dialogs, ShellApi, uLogger, uUploadForm;
+  Vcl.Graphics, Vcl.Imaging.pngimage, Context, Types, recanalystd,
+  GDIPAPI, GDIPOBJ, GDIPUTIL, ActiveX, Math;
 
 type
   TPlugInfo = record
@@ -245,152 +196,42 @@ type
     PlugForm: TMainForm;  { our form }
   end;
 
+  TImageMapItem = class(TObject)
+    Coordinates: TRect;
+    Hint: String;
+  end;
+
 const
   sExceptionMsg = 'Plugin Error:'#13'%s';
   sExceptionDestroyMsg = 'DestroyWindow Error:'#13'%s';
-  sCaption = 'AOC Recorded Games Mgx Viewer';
-
-const
-  PLUGIN_URL = 'http://aoc-mgx-utils.sourceforge.net/';
-  PLUGIN_NAME = 'A2LView';
-  PLUGIN_VERSION = 1.1;
-  PLUGIN_DESC = 'tcmd lister plugin for viewing AOE 2 recorded games information';
-  PLUGIN_AUTHOR = 'biegleux';
-  PLUGIN_AUTHOR_EMAIL = 'biegleux@gmail.com';
-  OS_URL = 'http://www.opensource.org/';
-  COPYRIGHT_NOTE = 'Copyright (c) 2009 by %s <%s>';
-  PLUGIN_CREDITS =
-    'Thanks goes to:'#13#10#13#10 +
-    ' - Christian Ghisler for the total commander and it''s great plugin interface'#13#10 +
-    ' - Bari for sharing mgx file format description'#13#10 +
-    ' - Dauro Ibero for constantly contributing, bug reporting and making the analysis much better, thank you!'#13#10 +
-    ' - David Tombs for sharing scn and scx file format description'#13#10 +
-    ' - www.aoe.cz for providing script hosting capacity'#13#10;
-
-  ANALYZE_ERROR =
-    'First four bytes of this file are zeroed. You can use mgxfix tool to fix it.';
-
-  MAP_WIDTH  = 306;
-  MAP_HEIGHT = 153;
-  MAP_BG_COLOR = clWhite;
-  MGL_EXT = '.mgl';
-  MGX_EXT = '.mgx';
-  SCN_EXT = '.scn';
-  SCX_EXT = '.scx';
-  MAX_COMMENT_LEN = 3000;
-
-procedure TStaticText.TrackMouse;
-var
-  EventTrack: Windows.TTrackMouseEvent;
-begin
-  if not TrackingMouse then
-  begin
-    EventTrack.cbSize := SizeOf (EventTrack);
-    EventTrack.dwFlags := TME_LEAVE;
-    EventTrack.dwHoverTime := 0;
-    EventTrack.hwndTrack := Handle;
-    TrackMouseEvent (EventTrack);
-    TrackingMouse := True;
-  end;
-end;
-
-procedure TStaticText.WMMouseLeave(var Message: TMessage);
-begin
-  TrackingMouse := False;
-  if Assigned (FOnMouseLeave) then
-    FOnMouseLeave (Self);
-end;
-
-procedure TStaticText.WMMouseMove(var Message: TWMMouseMove);
-begin
-  TrackMouse;
-  if Assigned (OnMouseMove) then
-    with Message do
-      if (Width > 32768) or (Height > 32768) then
-        with CalcCursorPos do
-          MouseMove (KeysToShiftState(Keys), X, Y)
-      else
-        MouseMove (KeysToShiftState (Keys), Message.XPos, Message.YPos);
-end;
-
-procedure TMainForm.OLabelMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-var
-  p: TPoint;
-begin
-  GetCursorPos (p);
-  if (p.X + 8 + HintForm.Width > Screen.Width) and (p.X + 8 - HintForm.Width > 0) then
-    HintForm.Left := p.X + 8 - HintForm.Width
-  else
-    HintForm.Left := p.X + 8;
-
-  if (p.Y + 8 + HintForm.Height > Screen.Height) then
-    HintForm.Top := p.Y + 8 - HintForm.Height
-  else
-    HintForm.Top := p.Y + 8;
-
-  if not HintForm.IsVisible then
-  begin
-    HintForm.IsVisible := True;
-    HintForm.Text := RecAnalyst.GameSettings.ObjectivesString;
-  end;
-end;
-
-procedure TMainForm.OLabelMouseLeave(Sender: TObject);
-begin
-  if HintForm.IsVisible then
-    HintForm.IsVisible := False;
-end;
-
-procedure TMainForm.TrackMouse;
-var
-  EventTrack: Windows.TTrackMouseEvent;
-begin
-  if not TrackingMouse then
-  begin
-    EventTrack.cbSize := SizeOf (EventTrack);
-    EventTrack.dwFlags := TME_LEAVE;
-    EventTrack.dwHoverTime := 0;
-    EventTrack.hwndTrack := Handle;
-    TrackMouseEvent (EventTrack);
-    TrackingMouse := True;
-  end;
-end;
-
-procedure TMainForm.WMMouseLeave(var msg: TMessage);
-begin
-  TrackingMouse := false;
-end;
+  sCaption = 'AOC Recorded Games Viewer';
 
 procedure wMsgBox(hWnd: HWND; Msg: String);
 begin
-  MessageBox (hWnd, PChar (Msg), sCaption, MB_OK + MB_ICONINFORMATION);
-  //MB_OK or MB_ICONERROR
+  MessageBox(hWnd, PChar(Msg), sCaption, MB_OK + MB_ICONINFORMATION);
 end;
 
 procedure TMainForm.AppException(Sender: TObject; E: Exception);
 begin
-  wMsgBox (Handle, Format (sExceptionMsg, [E.Message]));
+  wMsgBox(Handle, Format(sExceptionMsg, [E.Message]));
 end;
 
 procedure TMainForm.CreateParams(var Params: TCreateParams);
 begin
-  inherited CreateParams (Params);
+  inherited CreateParams(Params);
   Params.Style := (WS_CHILD or WS_MAXIMIZE) and not WS_CAPTION and not WS_BORDER;
-  Params.WindowClass.cbWndExtra := SizeOf (Pointer); // 4 bytes for address of form
+  Params.WindowClass.cbWndExtra := SizeOf(Pointer); // 4 bytes for address of form
 end;
 
 constructor TMainForm.CreateParented(ParentWindow: HWND; const FileToView: String);
 const
   WinCmdClassName = 'TTOTAL_CMD';
 begin
-  inherited CreateParented (ParentWindow);
-  TotCmdWin := FindWindow (WinCmdClassName, nil);
+  inherited CreateParented(ParentWindow);
+  TotCmdWin := FindWindow(WinCmdClassName, nil);
   ParentWin := ParentWindow;
-  QuickView := GetParent (ParentWin) <> 0;
-
+  QuickView := GetParent(ParentWin) <> 0;
   FileName := FileToView;
-//  RecAnalyst.FileName := FileToView;
-//  LoadFileName (FileToView);
 end;
 
 function HookDestroy(PluginWin: HWND; Msg, wParam, lParam: LongInt): LongInt; stdcall;
@@ -398,13 +239,12 @@ var
   p: ^TPlugInfo;
 begin
   { hook destroy our window }
-  p := Pointer (GetWindowLong (PluginWin, GWL_USERDATA));
-  if Msg <> WM_DESTROY then
-    Result := CallWindowProc (p^.PlugWinProc, PluginWin, Msg, wParam, lParam)
-  else
-  begin
+  p := Pointer(GetWindowLong(PluginWin, GWL_USERDATA));
+  if (Msg <> WM_DESTROY) then
+    Result := CallWindowProc(p^.PlugWinProc, PluginWin, Msg, wParam, lParam)
+  else begin
     { plugin close }
-    HideAoE2 (PluginWin);
+    HideAoE2(PluginWin);
     Result := 0;
   end;
 end;
@@ -413,19 +253,21 @@ procedure HideAoE2(PluginWin: HWND);
 var
   p: ^TPlugInfo;
 begin
-  p := Pointer (GetWindowLong (PluginWin, GWL_USERDATA));
+  p := Pointer(GetWindowLong(PluginWin, GWL_USERDATA));
   with p^.PlugForm do
     try
-      Application.RemoveComponent (p^.PlugForm);
+      Application.ShowHint := False;
+      Application.HintHidePause := 2500;
+      Application.RemoveComponent(p^.PlugForm);
       Application.Handle := 0;
       { restore callback function }
-      SetWindowLong (Handle, GWL_WNDPROC, Integer (p^.PlugWinProc));
-      Free;
+      SetWindowLong(Handle, GWL_WNDPROC, Integer(p^.PlugWinProc));
+      Free();
     except
       on E: Exception do
-        wMsgBox (Handle, Format (sExceptionDestroyMsg, [E.Message]));
+        wMsgBox(Handle, Format(sExceptionDestroyMsg, [E.Message]));
     end;
-  Dispose (p);
+  Dispose(p);
 end;
 
 function ShowAoE2(ListerWin: HWND; const FileToLoad: String; ShowFlags: Integer): HWND;
@@ -435,1216 +277,457 @@ var
   p: ^TPlugInfo;
 begin
   try
-    s := ExtractFilePath (FileToLoad);
-    if not SetCurrentDir (s) then
-      raise Exception.Create (Format ('Error of SetCurrentDir() for Folder: %s', [s]));
+    s := ExtractFilePath(FileToLoad);
+    if not SetCurrentDir(s) then
+      raise Exception.Create(Format('Error of SetCurrentDir() for Folder: %s', [s]));
 
-    MainForm := TMainForm.CreateParented (ListerWin, FileToLoad);
+    MainForm := TMainForm.CreateParented(ListerWin, FileToLoad);
     MainForm.Show;
     { synchronize our form and Lister }
     Application.Handle := ListerWin;
+    Application.ShowHint := True;
+    Application.HintHidePause := 5000;
+
     Application.OnException := MainForm.AppException;
-    Application.InsertComponent (MainForm);
+    Application.InsertComponent(MainForm);
 
     { substitution callback function }
-    New (p);
-    SetWindowLong (MainForm.Handle, GWL_USERDATA, Integer (p));
+    New(p);
+    SetWindowLong(MainForm.Handle, GWL_USERDATA, Integer(p));
     p^.PlugForm := MainForm;
-    p^.PlugWinProc := Pointer (SetWindowLong (MainForm.Handle, GWL_WNDPROC, Integer (@HookDestroy)));
+    p^.PlugWinProc := Pointer(SetWindowLong(MainForm.Handle, GWL_WNDPROC, Integer(@HookDestroy)));
 
     { set focus to our window }
     if not MainForm.QuickView then
-      PostMessage (MainForm.Handle, WM_SETFOCUS, 0, 0);
+      PostMessage(MainForm.Handle, WM_SETFOCUS, 0, 0);
     Result := MainForm.Handle;
   except
     on E: Exception do
     begin
-      wMsgBox (ListerWin, Format (sExceptionMsg, [E.Message]));
+      wMsgBox(ListerWin, Format(sExceptionMsg, [E.Message]));
       Result := 0;
     end;
   end;
 end;
 
-procedure TMainForm.FormActivate(Sender: TObject);
+procedure TMainForm.ViewResultsLabelClick(Sender: TObject);
+var
+  Panel: TPanel;
+  P: TPlayer;
+  L: TLabel;
+  i: Integer;
 begin
-//
+  for i := 0 to 15 do
+  begin
+    Panel := FindComponent('Panel' + IntToStr(i + 1)) as TPanel;
+    if (Panel.Tag = 0) then Continue;
+    P := TPlayer(Panel.Tag);
+    if (P.ResignTime > 0) then
+    begin
+      L := TLabel(Panel.Controls[1]);
+      L.Font.Style := [fsBold, fsStrikeOut];
+      L.Hint := Format('Resigned in %s', [TRecAnalyst.GameTimeToString(P.ResignTime)]);
+      L.ShowHint := True;
+    end;
+  end;
 end;
 
-procedure TMainForm.FormShow(Sender: TObject);
+procedure TMainForm.LoadFile();
 begin
-//
+  RecAnalyst.Analyze(FileName);
+
+  FillGameSettings();
+  FillPlayers();
+
+  try
+    FillChat();
+  except
+    on E: Exception do
+    begin
+      ChatTabSheet.TabVisible := False;
+      AppException(Self, E);
+    end;
+  end;
+
+  try
+    FillResearches();
+  except
+    on E: Exception do
+    begin
+      ResearchesTabSheet.TabVisible := False;
+      AppException(Self, E);
+    end;
+  end;
 end;
 
 ////////////////////////////////////////////////////////////////////////////////
 
 procedure TMainForm.FormCreate(Sender: TObject);
-var
-  CSS: TStringList;
-  sPath: String;
-  TSB: TTransparentScrollBox;
-  srcRect, dstRect: TRect;
-  bmp: TBitmap;
-  FS: TFormatSettings;
-  Msg: TLoggerMessage;
-const
-  BG_COLOR = clGray;
 begin
-//  PageControl.Align := alNone;
-  PageControl.Left := 4;
-  PageControl.Top := 4;
-  PageControl.Width := MainPanel.ClientWidth - PageControl.Left - 4;
-  PageControl.Height := MainPanel.ClientHeight - PageControl.Left - 4;
-  PageControl.Anchors := [akLeft, akTop, akRight, akBottom];
+  CollapseDetails();
+  TeamsGroupBox.Top := GameSettingsGroupBox.Top + GameSettingsGroupBox.Height
+    + TeamsGroupBox.Left;
+  ChatRichEdit.Width := ChatTabSheet.ClientWidth - 2 * ChatRichEdit.Left;
+  ChatRichEdit.Height := ChatTabSheet.ClientHeight - 2 * ChatRichEdit.Top;
+  ChatRichEdit.Anchors := [akTop, akLeft, akRight, akBottom];
 
-  ObjectivesLabel := TStaticText.Create (Self);
-  with ObjectivesLabel do
-  begin
-    Parent := GeneralScrollBox;
-    ParentColor := True;
-    ParentFont := True;
-    Left := 424;
-    Top := 32;
-    Width := 65;
-    Height := 17;
-    Caption := 'Objectives';
-    AutoSize := True;
-    OnMouseMove := OLabelMouseMove;
-    OnMouseLeave := OLabelMouseLeave;
-  end;
-
-  FS.DecimalSeparator := '.';
-  PluginInfoLabel.Caption := Format ('%s v%.1f - %s', [PLUGIN_NAME, PLUGIN_VERSION, PLUGIN_DESC], FS);
-  CopyrightLabel.Caption := Format (COPYRIGHT_NOTE, [PLUGIN_AUTHOR, PLUGIN_AUTHOR_EMAIL]);
-  PluginURLLabel.Caption := PLUGIN_URL;
-  AboutContentLabel.Caption := PLUGIN_CREDITS;
-  JvLabel16.Caption := Format ('About %s plugin', [PLUGIN_NAME]);  
-
-  BkgBitmap := TBitmap.Create;
-  MapBitmap := TBitmap.Create;
-  UnitsBitmap := TBitmap.Create;
-  BuildingsBitmap := TBitmap.Create;
-  ResearchesBitmap := TBitmap.Create;
-  OSBitmap := TBitmap.Create;
-  CheckedBitmap := TBitmap.Create;
-  UncheckedBitmap := TBitmap.Create;
-  BtnUpBitmap := TBitmap.Create;
-  BtnDownBitmap := TBitmap.Create;  
-
-  TeamsVCL := TTeamsVCL.Create (Self, GeneralScrollBox);
-
-  RecAnalyst := TRecAnalyst.Create;
-  RecAnalyst.KeepStreams := True;
-
-  ScAnalyst := TScAnalyst.Create;
-  ImageMap := TObjectList.Create;
-  
-  with UnitsBitmap do
-  begin
-    TransparentColor := BG_COLOR;
-    Transparent := True;
-    Canvas.Brush.Color := BG_COLOR;
-    Canvas.Font.Name := 'Georgia';
-  end;
-
-  with BuildingsBitmap do
-  begin
-    TransparentColor := BG_COLOR;
-    Transparent := True;
-    Canvas.Font.Name := 'Georgia';
-    Canvas.Brush.Color := BG_COLOR;
-  end;
-
-  with ResearchesBitmap do
-  begin
-    TransparentColor := BG_COLOR;
-    Transparent := True;
-    Canvas.Font.Name := 'Georgia';
-    Canvas.Brush.Color := BG_COLOR;
-  end;
+  ImageMap := TObjectList.Create();
 
   try
-    TResourceDll.LoadBitmap (BACKGROUND_RESNAME, BkgBitmap);
+    RecAnalyst := TRecAnalyst.Create();
+    LoadFile();
   except
-    on E: Exception do
-      Logger.SendException ('Resource Name: %s', [BACKGROUND_RESNAME], E);
+    PageControl.Visible := False;
+    raise;
   end;
-
-  try
-    TResourceDll.LoadBitmap (OPENSRC_RESNAME, OSBitmap);
-  except
-    on E: Exception do
-      Logger.SendException ('Resource Name: %s', [OPENSRC_RESNAME], E);
-  end;
-
-  if (DllHandle <> 0) then
-  begin
-    with ImageList do
-    begin
-      Handle := ImageList_LoadImage (DllHandle, ICONS_RESNAME, Width, AllocBy, clFuchsia,
-                    IMAGE_BITMAP, LR_CREATEDIBSECTION);
-    end;
-    PageControl.Images := ImageList;
-  end;
-
-  try
-    TResourceDll.LoadBitmap (BTNDOWN_RESNAME, BtnDownBitmap);
-    TResourceDll.LoadBitmap (BTNUP_RESNAME, BtnUpBitmap);
-  except
-    on E: Exception do
-    begin
-      if BtnDownBitmap.HandleAllocated then
-        BtnDownBitmap.Assign (nil);
-      Logger.SendException (E);
-    end;
-  end;
-
-  try
-    TResourceDll.LoadBitmap (CHECKED_RESNAME, CheckedBitmap);
-    TResourceDll.LoadBitmap (UNCHECKED_RESNAME, UncheckedBitmap);
-  except
-    on E: Exception do
-    begin
-      if CheckedBitmap.HandleAllocated then
-        CheckedBitmap.Assign (nil);
-      Logger.SendException (E);
-    end;
-  end;
-
-  { adjust label positions }
-  GameTypeLabel.Left := JvLabel1.Left + JvLabel1.Width + 2;
-  MapStyleLabel.Left := JvLabel2.Left + JvLabel2.Width + 2;
-  LocationLabel.Left := JvLabel3.Left + JvLabel3.Width + 2;
-  PlayersLabel.Left := JvLabel4.Left + JvLabel4.Width + 2;
-  DurationLabel.Left := JvLabel5.Left + JvLabel5.Width + 2;
-  DifficultyLabel.Left := JvLabel6.Left + JvLabel6.Width + 2;
-  PopulationLabel.Left := JvLabel7.Left + JvLabel7.Width + 2;
-  MapSizeLabel.Left := JvLabel8.Left + JvLabel8.Width + 2;
-  SpeedLabel.Left := JvLabel9.Left + JvLabel9.Width + 2;
-  LockDiplomacyLabel.Left := JvLabel10.Left + JvLabel10.Width + 2;
-  RevealMapLabel.Left := JvLabel11.Left + JvLabel11.Width + 2;
-  VictoryLabel.Left := JvLabel12.Left + JvLabel12.Width + 2;
-  POVLabel.Left := JvLabel13.Left + JvLabel13.Width + 2;
-  GameVersionLabel.Left := JvLabel14.Left + JvLabel14.Width + 2;
-  ScenarioFileLabel.Left := JvLabel15.Left + JvLabel15.Width + 2;
-
-  { Initialize Web Browser Controls }
-  sPath := IncludeTrailingPathDelimiter (ExtractFilePath (GetModuleName (HInstance)));
-  CSS := TStringList.Create;
-  try
-    try
-      CSS.LoadFromFile (sPath + CSS_FILE);
-      ChatWB.HostCSS := CSS.Text;
-      TributesWB.HostCSS := CSS.Text;
-//      ChatWB.Navigate ('about:blank');
-//      ChatWB.LoadFromString ('');
-//      TributesWB.Navigate ('about:blank');
-//      TributesWB.LoadFromString ('');
-    except
-      on E: Exception do
-        Logger.SendException (E);
-    end;
-  finally
-    CSS.Free;
-  end;
-
-  ChatWB.Width   := ChatWB.Parent.ClientWidth - 2 * ChatWB.Left;
-  ChatWB.Height  := ChatWB.Parent.ClientHeight - ChatWB.Top - ChatWB.Left;
-  ChatWB.Anchors := [akLeft, akTop, akRight, akBottom];
-
-  TributesWB.Width   := TributesWB.Parent.ClientWidth - 2 * TributesWB.Left;
-  TributesWB.Height  := TributesWB.Parent.ClientHeight - TributesWB.Top - TributesWB.Left;
-  TributesWB.Anchors := [akLeft, akTop, akRight, akBottom];
-
-  ResetVCL;
-
-  { Scenario Tab Sheet }
-  BkgWinBitmap := TBitmap.Create;
-  BkgWinBitmap.Transparent := True;
-  TabDownBitmap := TBitmap.Create;
-  TabUpBitmap := TBitmap.Create;
-
-  try
-    TResourceDll.LoadBitmap (BGWIN_RESNAME, BkgWinBitmap);
-    TResourceDll.LoadBitmap (TABDOWN_RESNAME, TabDownBitmap);
-    TResourceDll.LoadBitmap (TABUP_RESNAME, TabUpBitmap);
-
-    TSB := TTransparentScrollBox.Create (Self);
-    with TSB do
-    begin
-      Parent := ScenarioInfoTabSheet;
-      VertScrollBar.Tracking := True;
-      HorzScrollBar.Tracking := True;
-      Left := 80;
-      Top := 100;
-      Width := 489;
-      Height := 337;
-      BorderStyle := bsNone;
-    end;
-    srcRect := Rect (TSB.Left - ScBgPaintBox.Left, TSB.Top - ScBgPaintBox.Top,
-        TSB.Left - ScBgPaintBox.Left + TSB.ClientWidth, TSB.Top -
-        ScBgPaintBox.Top + TSB.ClientHeight);
-    dstRect := Rect (0, 0, TSB.ClientWidth, TSB.ClientHeight);
-    bmp := TBitmap.Create;
-    bmp.Width := TSB.ClientWidth;
-    bmp.Height := TSB.ClientHeight;
-    bmp.Canvas.CopyRect (dstRect, BkgWinBitmap.Canvas, srcRect);
-    TSB.Bitmap := bmp;
-    TSB.OwnBitmap := True;
-
-    ScContentLabel.Parent := TSB;
-    ScContentLabel.Left := 0;
-    ScContentLabel.Top := 0;
-    ScenarioMapPaintBox.Parent := TSB;
-    ScenarioMapPaintBox.Left := TSB.ClientWidth div 2 - ScenarioMapPaintBox.ClientWidth div 2;
-    ScenarioMapPaintBox.Top := 60;
-  except
-    on E: Exception do
-      Logger.SendException (E);
-  end;
-
-  AddCommentB := False;
-  CreateBackupB := True;
-  UpdateDown := False;
-  CommentMemo.MaxLength := MAX_COMMENT_LEN;
-
-  HintForm := THintForm.Create (Self);
-  TeamsVCL.HintWin := HintForm;
-
-  LoadFile;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  BkgBitmap.Free;
-  MapBitmap.Free;
-  UnitsBitmap.Free;
-  BuildingsBitmap.Free;
-  ResearchesBitmap.Free;
-  BkgWinBitmap.Free;
-  TabDownBitmap.Free;
-  TabUpBitmap.Free;
-  OSBitmap.Free;
-  TeamsVCL.Free;
-  RecAnalyst.Free;
-  ScAnalyst.Free;
-  ImageMap.Clear;
+  if Assigned(RecAnalyst) then
+    RecAnalyst.Free();
 end;
 
-procedure TMainForm.LoadFile;
+function ListCompare(Item1: Pointer; Item2: Pointer): Integer;
 var
-  Msg: TLoggerMessage;
-  UF: TUploadForm;
+  Time1, Time2: Integer;
 begin
-  { clear logs from previous view if any exist }
-  Logger.MessageList.Clear;
-  try
-//    ResetVCL;
-    if (ExtractFileExt (FileName) = SCN_EXT) or
-       (ExtractFileExt (FileName) = SCX_EXT) then
-    begin
-      { we have got a scenario file }
-//      ScAnalyst.Reset;
-      ScAnalyst.FileName := FileName;
-      try
-        if ScAnalyst.Analyze then
-          UpdateScenarioVCL
-        else
-          ResetVCL;
-      except
-        on E: Exception do
-        begin
-          Logger.SendException (E, True);
-//          raise;
-        end;
-      end;
-    end else
-    begin
-//      RecAnalyst.Reset;
-      RecAnalyst.FileName := FileName;
-      try
-        if RecAnalyst.Analyze then
-        begin
-          UpdateGameSettingsVCL;
-          UpdateMapVCL;
-          TeamsVCL.Build (RecAnalyst, TeamsLabel.Left + 12, TeamsLabel.Top + 22);
-          UpdateGameChatVCL;
-          UpdateTributingVCL;
-          UpdateResearchesVCL;
-          UpdateUnitsVCL;
-          UpdateBuildingsVCL;
-          UpdateCommentVCL;
-        end else
-          ResetVCL;
-      except
-        on E: Exception do
-        begin
-          if not RecAnalyst.ZeroHeaderLen then
-            Logger.SendException (E, True)
-          else
-            MessageDlg (ANALYZE_ERROR, mtInformation, [mbOK], 0);
-          //raise;
-        end;
-      end;
+  Time1 := 0; Time2 := 0;
+  if (TObject(Item1) is TChatMessage) then
+    Time1 := TChatMessage(Item1).Time
+  else if (TObject(Item1) is TTribute) then
+    Time1 := TTribute(Item1).Time;
 
-      if (Logger.MessageList.Count > 0) then
-      begin
-        Msg := TLoggerMessage.Create;
-        Msg.MessageType := mtMessage;
-        Msg.MessageText := Format ('Generated log for file %s (plugin ver.: %f):', [ExtractFileName(FileName), PLUGIN_VERSION]);
-        Logger.MessageList.Insert(Msg);
+  if (TObject(Item2) is TChatMessage) then
+    Time2 := TChatMessage(Item2).Time
+  else if (TObject(Item2) is TTribute) then
+    Time2 := TTribute(Item2).Time;
 
-        if MessageDlg ('File was not properly analyzed. Would you like to upload it to make the analysis better?',
-            mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-        begin
-          UF := TUploadForm.Create (Self);
-          UF.FileName := FileName;
-          UF.Show;
-        end;
-      end;
-
-    end;
-  finally
-    //RecAnalyst.Reset;
-  end;
+  if (Time1 < Time2) then Result := -1
+  else if (Time1 > Time2) then Result := 1
+  else Result := 0;
 end;
 
-procedure TMainForm.UpdateGameSettingsVCL;
-begin
-  if not Assigned (RecAnalyst) then
-    Exit;
-
-  with RecAnalyst, RecAnalyst.GameSettings do
-  begin
-    MapStyleLabel.Visible := not IsScenario and IsAOC;
-    LocationLabel.Visible := not IsScenario;
-    PopulationLabel.Visible := not IsScenario;
-    MapSizeLabel.Visible := not IsScenario;
-    LockDiplomacyLabel.Visible := not IsScenario;
-    ScenarioFileLabel.Visible := IsScenario;
-    JvLabel15.Visible := IsScenario;
-    ObjectivesLabel.Visible := not IsScenario;
-
-    if IsScenario then
-    begin
-      JvLabel2.Font.Style := JvLabel2.Font.Style + [fsStrikeOut];
-      JvLabel3.Font.Style := JvLabel3.Font.Style + [fsStrikeOut];
-      JvLabel7.Font.Style := JvLabel7.Font.Style + [fsStrikeOut];
-      JvLabel8.Font.Style := JvLabel8.Font.Style + [fsStrikeOut];
-      JvLabel10.Font.Style := JvLabel10.Font.Style + [fsStrikeOut];
-      ScenarioFileLabel.Caption := ScFileName;
-      TeamsLabel.Top := JvLabel15.Top + 28;
-    end else
-    begin
-      JvLabel2.Font.Style := JvLabel2.Font.Style - [fsStrikeOut];
-      JvLabel3.Font.Style := JvLabel3.Font.Style - [fsStrikeOut];
-      JvLabel7.Font.Style := JvLabel7.Font.Style - [fsStrikeOut];
-      JvLabel8.Font.Style := JvLabel8.Font.Style - [fsStrikeOut];
-      JvLabel10.Font.Style := JvLabel10.Font.Style - [fsStrikeOut];
-      TeamsLabel.Top := JvLabel14.Top + 28;
-    end;
-    if IsAOK then
-      JvLabel2.Font.Style := JvLabel2.Font.Style + [fsStrikeOut];
-
-    GameTypeLabel.Caption := sGameType;
-    MapStyleLabel.Caption := sMapStyle;
-    LocationLabel.Caption := Map;
-    PlayersLabel.Caption := Players;
-    DurationLabel.Caption := TRecAnalyst.GameTimeToString (PlayTime);
-    DifficultyLabel.Caption := sDifficultyLevel;
-    PopulationLabel.Caption := IntToStr (PopLimit);
-    MapSizeLabel.Caption := sMapSize;
-    SpeedLabel.Caption := sGameSpeed;
-    RevealMapLabel.Caption := sRevealMap;
-    if LockDiplomacy then
-      LockDiplomacyLabel.Caption := 'Yes'
-    else
-      LockDiplomacyLabel.Caption := 'No';
-    VictoryLabel.Caption := Victory.VictoryString;
-    POVLabel.Caption := POVEx;
-    GameVersionLabel.Caption := sGameVersion;
-  end;
-end;
-
-procedure TMainForm.UpdateGameChatVCL;
-var
-  ChatMessages: TStringList;
-  sColor: String;
-  i, sum: Integer;
-  Player: TPlayer;
-  Spammers: array[1..8] of Integer;
-  ChatMessage: TChatMessage;
-begin
-  if not Assigned (RecAnalyst) then
-    Exit;
-
-  ChatTabSheet.TabVisible := RecAnalyst.IsAOC;
-  if not RecAnalyst.IsAOC then
-    Exit;
-
-  ChatWB.LoadFromString (''); { need to call it twice? }
-  FillChar (Spammers, SizeOf (Spammers), 0);
-  ChatMessages := TStringList.Create;
-  try
-    { pre-game chat }
-    if (RecAnalyst.PreGameChatMessages.Count > 0) then
-    begin
-      ChatMessages.Add ('<span class="section">pre-game chat:</span>');
-      for i := 0 to RecAnalyst.PreGameChatMessages.Count - 1 do
-      begin
-        ChatMessage := RecAnalyst.PreGameChatMessages[i] as TChatMessage;
-        if Assigned (ChatMessage.Player) then
-        begin
-          sColor := HTMLCOLORS[ChatMessage.Player.ColorId];
-          Inc (Spammers[ChatMessage.Player.Index]);
-        end else
-          sColor := '#ffffff';
-        ChatMessages.Add (Format ('<span style="color:%s">%s</span><br />',
-            [sColor, HTMLSpecialChars (ChatMessage.Msg)]));
-      end;
-    end;
-    { in-game chat }
-    if (RecAnalyst.InGameChatMessages.Count > 0) then
-    begin
-      ChatMessages.Add ('<span class="section">in-game chat:</span>');
-      for i := 0 to RecAnalyst.InGameChatMessages.Count - 1 do
-      begin
-        ChatMessage := RecAnalyst.InGameChatMessages[i] as TChatMessage;
-        if Assigned (ChatMessage.Player) then
-        begin
-          sColor := HTMLCOLORS[ChatMessage.Player.ColorId];
-          Inc (Spammers[ChatMessage.Player.Index]);
-        end else
-          sColor := '#ffffff';
-        ChatMessages.Add (Format ('<span class="time">(%s)</span>',
-            [TRecAnalyst.GameTimeToString (ChatMessage.Time)]));
-        ChatMessages.Add (Format ('<span class="message" style="color:%s">%s</span><br />',
-            [sColor, HTMLSpecialChars (ChatMessage.Msg)]));
-      end;
-    end;
-    sum := 0;
-    for i := Low (Spammers) to High (Spammers) do
-      Inc (sum, Spammers[i]);
-    if (sum > 0) then
-    begin
-      ChatMessages.Add (Format ('<span class="section">messages in total: %d</span>', [sum]));
-      for i := Low (Spammers) to High (Spammers) do
-      begin
-        Player := RecAnalyst.PlayerList.GetPlayerByIndex (i);
-        if not Assigned (Player) then
-          Continue;
-
-          ChatMessages.Add (Format ('<span style="color:%s">%s:</span> %d messages<br />',
-              [HTMLCOLORS[Player.ColorId], HTMLSpecialChars (Player.Name), Spammers[i]]));
-//          if (Spammers[i] > 0) then
-      end;
-    end;
-    ChatWB.LoadFromStrings (ChatMessages);
-  finally
-    ChatMessages.Free;
-  end;
-
-  // AutoPopup? 
-  if (RecAnalyst.PreGameChatMessages.Count > 0) or (RecAnalyst.InGameChatMessages.Count > 0) then
-    ChatWB.PopupMenu := ChatPopupMenu
-  else
-    ChatWB.PopupMenu := nil;
-end;
-
-procedure TMainForm.UpdateTributingVCL;
-type
-  TTributeSent = record
-    Amount: Integer;
-    Food, Wood, Stone, Gold: Integer;
-  end;
-  TTributeReceived = TTributeSent; { Fee included }
-
-var
-  Tribute: TTribute;
-  TributeMessages: TStringList;
-  Msg: string;
-  Player: TPlayer;
-  Senders: array[0..7] of TTributeSent;
-  Receivers: array[0..7] of TTributeReceived;
-  i: Integer;
-  sSnd, sRcv: String;
-begin
-  if not Assigned (RecAnalyst) then
-    Exit;
-
-  if (RecAnalyst.Tributes.Count = 0) then
-  begin
-    TributesWB.LoadFromString ('');
-    Exit;
-  end;
-
-  TributesWB.LoadFromString (''); { need to call it twice? }
-  FillChar (Senders, SizeOf (Senders), 0);
-  FillChar (Receivers, SizeOf (Receivers), 0);
-
-  TributeMessages := TStringList.Create;
-  try
-    for i := 0 to RecAnalyst.Tributes.Count - 1 do
-    begin
-      Tribute := RecAnalyst.Tributes[i] as TTribute;
-      with Tribute do
-      begin
-        Msg := Format ('<span class="time">(%s)</span> <span style="color:%s">%s</span> ' +
-                         'has sent %d (-%d) %s to <span style="color:%s">%s</span><br />',
-                [TRecAnalyst.GameTimeToString (Time), HTMLCOLORS[PlayerFrom.ColorId], PlayerFrom.Name, Amount, Round (Amount + (Amount * Fee)),
-                LowerCase (RESOURCES[ResourceId]), HTMLCOLORS[PlayerTo.ColorId], PlayerTo.Name]);
-
-        TributeMessages.Add (Msg);
-
-        if PlayerFrom.Index - 1 in [0..7] then
-        begin
-          Inc (Senders[PlayerFrom.Index - 1].Amount, Round (Amount + (Amount * Fee)));
-          case ResourceId of
-            rFood:  Inc (Senders[PlayerFrom.Index - 1].Food, Round (Amount + (Amount * Fee)));
-            rWood:  Inc (Senders[PlayerFrom.Index - 1].Wood, Round (Amount + (Amount * Fee)));
-            rStone: Inc (Senders[PlayerFrom.Index - 1].Stone, Round (Amount + (Amount * Fee)));
-            rGold:  Inc (Senders[PlayerFrom.Index - 1].Gold, Round (Amount + (Amount * Fee)));
-          end;
-        end;
-        if PlayerTo.Index - 1 in [0..7] then
-        begin
-          Inc (Receivers[PlayerTo.Index - 1].Amount, Amount);
-          case ResourceId of
-            rFood:  Inc (Receivers[PlayerTo.Index - 1].Food, Amount);
-            rWood:  Inc (Receivers[PlayerTo.Index - 1].Wood, Amount);
-            rStone: Inc (Receivers[PlayerTo.Index - 1].Stone, Amount);
-            rGold:  Inc (Receivers[PlayerTo.Index - 1].Gold, Amount);
-          end;
-        end;
-      end;
-    end;
-
-    sSnd := ''; sRcv := '';
-    for i := 0 to 7 do
-    begin
-      Player := RecAnalyst.PlayerList.GetPlayerByIndex (i + 1);
-      if not Assigned (Player) then
-        Continue;
-        
-      if (Senders[i].Amount > 0) then
-      begin
-        sSnd := sSnd + Format ('<span style="color:%s">%s</span> has sent ' +
-                                  '%d (food: %d, wood: %d, stone: %d, gold: %d) resources in total<br />' + #13#10,
-                        [HTMLCOLORS[Player.ColorId], Player.Name, Senders[i].Amount, Senders[i].Food,
-                        Senders[i].Wood, Senders[i].Stone, Senders[i].Gold]);
-      end;
-
-      if (Receivers[i].Amount > 0) then
-      begin
-        sRcv := sRcv + Format ('<span style="color:%s">%s</span> has received ' +
-                                  '%d (food: %d, wood: %d, stone: %d, gold: %d) resources in total<br />',
-                        [HTMLCOLORS[Player.ColorId], Player.Name, Receivers[i].Amount, Receivers[i].Food,
-                        Receivers[i].Wood, Receivers[i].Stone, Receivers[i].Gold]);
-      end;
-    end;
-
-    TributeMessages.Insert (0, '<br />');
-    TributeMessages.Insert (0, sRcv);
-    TributeMessages.Insert (0, sSnd);
-    TributeMessages.Insert (0, '<span class="section">tributes in total:</span>');
-
-    TributesWB.LoadFromStrings (TributeMessages);
-  finally
-    TributeMessages.Free;
-  end;
-end;
-
-procedure TMainForm.UpdateUnitsVCL;
-var
-  ResourceBmp: TBitmapEx;
-  TU: TTrainedUnit;
-  i: Integer;
-const
-  RES_BMP_WH = 20;
-  BG_COLOR = clGray;
-  CAPTION_STR = 'trained units in total';
-begin
-  if (RecAnalyst.Units.Count = 0) or not DllLoaded then
-  begin
-    UnitsBitmap.Assign (nil);
-    Exit;
-  end;
-
-  ResourceBmp := TBitmapEx.Create;
-  try
-    UnitsBitmap.Width := UnitsBitmap.Canvas.TextWidth (CAPTION_STR);
-    UnitsBitmap.Height := RecAnalyst.Units.Count * RES_BMP_WH + 20;
-    UnitsBitmap.Canvas.TextOut (0, 0, CAPTION_STR);
-
-    for i := 0 to RecAnalyst.Units.Count - 1 do
-    begin
-      TU := RecAnalyst.Units[i];
-      try
-        TResourceDll.LoadBitmap (TU.ResName, TBitmap(ResourceBmp));
-        ResourceBmp.Resize2 (20, 20);
-        UnitsBitmap.Canvas.Draw (0, 20 + i * RES_BMP_WH, ResourceBmp);
-//        UnitsBitmap.Canvas.StretchDraw (Rect (0, 20 + i * RES_BMP_WH,
-//            RES_BMP_WH, 20 + i * RES_BMP_WH + RES_BMP_WH), ResourceBmp);
-        UnitsBitmap.Canvas.TextOut (RES_BMP_WH + 4, 20 + i * RES_BMP_WH, IntToStr (TU.Count));
-      except
-        on E: Exception do
-          Logger.SendException ('Data: U.Id: %d, U.ResName: %s', [TU.Id, TU.ResName], E, True);
-          //TODO!
-//          TLog.Log (Format ('%s (Data: U.Id: %d, U.ResName: %s, FileName: %s)',
-//              [E.Message, TU.Id, TU.ResName, RecAnalyst.FileName]), ClassName, 'UpdateUnitsVCL');
-      end;
-    end;
-  finally
-    ResourceBmp.Free;
-  end;
-
-  UnitsPaintBox.ClientWidth := UnitsBitmap.Width;
-  UnitsPaintBox.ClientHeight := UnitsBitmap.Height;
-  UnitsPaintBox.Repaint;
-end;
-
-procedure TMainForm.UpdateBuildingsVCL;
-type
-  PBuilding = ^TBuildingRec;
-  TBuildingRec = record
-    Id, Sum: Integer;
-    Num: array[0..7] of Integer;
-    Name, ResName: String[255];
-  end;
-
-  function BuildingsCompare(Item1, Item2: Pointer): Integer;
-  begin
-    if PBuilding (Item1).Sum < PBuilding (Item2).Sum then
-      Result := 1
-    else if PBuilding (Item1).Sum > PBuilding (Item2).Sum then
-      Result := -1
-    else
-      Result := 0;
-  end;
-
-var
-  Player: TPlayer;
-  B: TBuilding;
-  i, j, k, idx: Integer;
-  BuildingList: TList;
-  BuildingPtr: PBuilding;
-  ResBmp: TBitmapEx;
-  TextWidth: Integer;
-  x_offsets: array[0..8] of Integer; { 0 is for column "total" }
-  BmpWidth: Integer;
-const
-  RES_BMP_WH = 20;
-  BG_COLOR = clGray;
-  TOTAL_STR = 'total';
-begin
-  if not DllLoaded then
-    Exit;
-
-  { shifting PB according to units PB }
-  BuildingsPaintBox.Left := UnitsPaintBox.Left + UnitsPaintBox.Width;
-
-  { create rearranged list of buildings
-    columns: building id, total, # for player1, # for player2, etc. }
-  BuildingList := TList.Create;
-  try
-    { for each player }
-    for i := 0 to RecAnalyst.PlayerList.Count - 1 do
-    begin
-      Player := RecAnalyst.PlayerList[i];
-      { for each her / his building built }
-      for j := 0 to Player.Buildings.Count - 1 do
-      begin
-        B := Player.Buildings[j];
-
-        { find given building in our new building list (based on its id) }
-        idx := -1;
-        for k := 0 to BuildingList.Count - 1 do
-        begin
-          if (PBuilding (BuildingList[k])^.Id = B.Id) then
-          begin
-            { found, update column "total" as well as column for this player }
-            Inc (PBuilding (BuildingList[k])^.Sum, B.Count);
-            PBuilding (BuildingList[k])^.Num[Player.Index - 1] := B.Count;
-            idx := k;
-            Break;
-          end;
-        end;
-
-        if (idx = -1) then
-        begin
-          { not found, building has not been added to our new building list yet, add it than }
-          New (BuildingPtr);
-          FillChar (BuildingPtr^, SizeOf (TBuildingRec), 0);
-          with BuildingPtr^ do
-          begin
-            Id := B.Id;
-            Sum := B.Count;
-            Num[Player.Index - 1] := B.Count;
-            Name := B.Name;
-            ResName := B.ResName;
-          end;
-          BuildingList.Add (BuildingPtr);
-        end;
-      end;
-    end;
-
-    if (BuildingList.Count = 0) then
-    begin
-      BuildingsBitmap.Assign (nil);
-      Exit;
-    end;
-
-    { sort our new building list by the column "total" }
-    BuildingList.Sort (@BuildingsCompare);
-
-    { draw bitmap finally }
-    ResBmp := TBitmapEx.Create;
-    try
-      { calculate x-offsets for each column }
-      FillChar (x_offsets, SizeOf (x_offsets), 0);
-
-      BmpWidth := RES_BMP_WH + 10;
-      x_offsets[0] := BmpWidth;      
-      TextWidth := BuildingsBitmap.Canvas.TextWidth (TOTAL_STR);
-      for i := 0 to RecAnalyst.PlayerList.Count - 1 do
-      begin
-        Player := RecAnalyst.PlayerList[i];
-        { TODO: testovat coop }
-        if Player.IsCooping then
-          Continue;
-        Inc (BmpWidth, TextWidth + 10);
-        x_offsets[Player.Index] := BmpWidth;
-        TextWidth := BuildingsBitmap.Canvas.TextWidth (Player.Name);
-      end;
-      Inc (BmpWidth, TextWidth + 10);
-
-      { set calculated dimensions }
-      BuildingsBitmap.Width := BmpWidth;
-      BuildingsBitmap.Height := BuildingList.Count * RES_BMP_WH + 20;
-
-      { draw "total" and player names in the header }
-      BuildingsBitmap.Canvas.TextOut (x_offsets[0], 0, TOTAL_STR);
-      for i := 0 to RecAnalyst.PlayerList.Count - 1 do
-      begin
-        Player := RecAnalyst.PlayerList[i];
-        { TODO: testovat coop }
-        if Player.IsCooping then
-          Continue;
-        BuildingsBitmap.Canvas.Font.Color := Player.Color;
-        BuildingsBitmap.Canvas.TextOut (x_offsets[Player.Index], 0, Player.Name);
-      end;
-
-      { set the color back to black }
-      BuildingsBitmap.Canvas.Font.Color := clBlack;
-
-      { draw columns, iterating by lines }
-      for i := 0 to BuildingList.Count - 1 do
-      begin
-        BuildingPtr := BuildingList[i];
-
-        { draw building image and column "total" }
-        try
-          { moze sa stat, ze BuildingPtr^.ResName = '' ak neexistujuce Id }
-          TResourceDll.LoadBitmap (BuildingPtr^.ResName, TBitmap(ResBmp));
-          ResBmp.Resize2 (RES_BMP_WH, RES_BMP_WH);
-          BuildingsBitmap.Canvas.Draw (0, RES_BMP_WH + i * RES_BMP_WH, ResBmp);
-//          BuildingsBitmap.Canvas.StretchDraw (Rect (0, RES_BMP_WH + i * RES_BMP_WH, RES_BMP_WH, RES_BMP_WH + i * RES_BMP_WH + RES_BMP_WH), ResBmp);
-          BuildingsBitmap.Canvas.TextOut (x_offsets[0], RES_BMP_WH + i * RES_BMP_WH, IntToStr (BuildingPtr^.Sum));
-        except
-          on E: Exception do
-            Logger.SendException ('Data: B.Id: %d, B.ResName: %s', [BuildingPtr^.Id, BuildingPtr^.ResName], E, True);
-            //TODO!
-            //TLog.Log (Format ('%s (Data: B.Id: %d, B.ResName: %s, FileName: %s)',
-            //    [E.Message, BuildingPtr^.Id, BuildingPtr^.ResName, RecAnalyst.FileName]), ClassName, 'UpdateBuildingsVCL');
-        end;
-
-        { draw each player's column (0..7) }
-        for j := Low (BuildingPtr^.Num) to High (BuildingPtr^.Num) do
-        begin
-          Player := RecAnalyst.PlayerList.GetPlayerByIndex (j + 1);
-          if not Assigned (Player) then
-            Continue;
-
-          if (BuildingPtr^.Num[j] = 0) then
-            BuildingsBitmap.Canvas.TextOut (x_offsets[Player.Index], RES_BMP_WH + i * RES_BMP_WH, '-')
-          else
-            BuildingsBitmap.Canvas.TextOut (x_offsets[Player.Index], RES_BMP_WH + i * RES_BMP_WH, IntToStr (BuildingPtr^.Num[j]));
-        end;
-
-      end;
-      { set dimensions for PB according to buildings image and repaint }
-      BuildingsPaintBox.ClientWidth := BuildingsBitmap.Width;
-      BuildingsPaintBox.ClientHeight := BuildingsBitmap.Height;
-      BuildingsPaintBox.Repaint;
-    finally
-      ResBmp.Free;
-    end;
-
-  finally
-    for i := BuildingList.Count - 1 downto 0 do
-    begin
-      BuildingPtr := BuildingList[i];
-      BuildingList.Delete (i);
-      Dispose (BuildingPtr);
-    end;
-    BuildingList.Free;
-  end;
-end;
-
-procedure TMainForm.UpdateMapVCL;
-begin
-  if not RecAnalyst.GenerateMap (MapBitmap, MAP_WIDTH, MAP_HEIGHT, MAP_BG_COLOR) then
-    MapBitmap.Assign (nil);
-
-  if Assigned (MapBitmap) and MapBitmap.HandleAllocated then
-  begin
-    MapBitmap.Transparent := True;
-    MapPaintBox.Repaint;
-    MapPaintBox.PopupMenu := MapPopupMenu;
-  end else
-    MapPaintBox.PopupMenu := nil;
-end;
-
-procedure TMainForm.UpdateResearchesVCL;
-begin
-  if (RecAnalyst.Researches.Count = 0) or not DllLoaded then
-    Exit;
-
-  if not RecAnalyst.GenerateResearches (ResearchesBitmap, ImageMap) then
-  begin
-    ResearchesBitmap.Assign (nil);
-    Exit;
-  end;
-
-  if Assigned (ResearchesBitmap) and ResearchesBitmap.HandleAllocated then
-  begin
-    ResPaintBox.ClientWidth := ResearchesBitmap.Width;
-    ResPaintBox.ClientHeight := ResearchesBitmap.Height;
-    ResPaintBox.Repaint;
-  end;
-end;
-
-procedure TMainForm.UpdateScenarioVCL;
+function TMainForm.GetSortedMessages(): TObjectList;
 var
   i: Integer;
 begin
-  if not ScAnalyst.GenerateMap (MapBitmap, MAP_WIDTH, MAP_HEIGHT, MAP_BG_COLOR) then
-    MapBitmap.Assign (nil);
-
-  if Assigned (MapBitmap) and MapBitmap.HandleAllocated then
-  begin
-    MapBitmap.Transparent := True;
-    ScenarioMapPaintBox.Repaint;
-    ScenarioMapPaintBox.PopupMenu := MapPopupMenu;
-  end else
-    ScenarioMapPaintBox.PopupMenu := nil;
-
-  BtnPaintBox1Click(BtnPaintBox1);
-  for i := 0 to PageControl.PageCount - 1 do
-    PageControl.Pages[i].TabVisible := False;
-  ScenarioInfoTabSheet.TabVisible := True;
-  AboutTabSheet.TabVisible := True;
+  Result := TObjectList.Create(False);
+  for i := 0 to RecAnalyst.InGameChatMessages.Count - 1 do
+    Result.Add(RecAnalyst.InGameChatMessages[i]);
+  for i := 0 to RecAnalyst.Tributes.Count - 1 do
+    Result.Add(RecAnalyst.Tributes[i]);
+  Result.Sort(@ListCompare);
 end;
 
-procedure TMainForm.UpdateCommentVCL;
-begin
-  if RecAnalyst.GameSettings.IsScenario then
-    Exit;
-  CommentTabSheet.TabVisible := True;
-  AddCommentB := (RecAnalyst.CommentString <> '');
-  CommentMemo.Enabled := AddCommentB;
-  CommentMemo.Lines.Text := RecAnalyst.CommentString;
-end;
-
-procedure TMainForm.ResetVCL;
+procedure TMainForm.FillChat();
 var
+  Messages: TObjectList;
+  M: TChatMessage;
+  T: TTribute;
   i: Integer;
 begin
-  for i := 0 to PageControl.PageCount - 1 do
-    PageControl.Pages[i].TabVisible := True;
-  ScenarioInfoTabSheet.TabVisible := False;
-  CommentTabSheet.TabVisible := False;  
-
-  if MapBitmap.HandleAllocated then
-    MapBitmap.Assign (nil);
-
-  TeamsVCL.Clear;
-  ChatWB.LoadFromString ('');
-  TributesWB.LoadFromString ('');
-
-  if UnitsBitmap.HandleAllocated then
-    UnitsBitmap.Assign (nil);
-  if BuildingsBitmap.HandleAllocated then
-    BuildingsBitmap.Assign (nil);
-  if ResearchesBitmap.HandleAllocated then
-    ResearchesBitmap.Assign (nil);
-
-  ScenarioFileLabel.Visible := False;
-  JvLabel15.Visible := False;
-  TeamsLabel.Top := JvLabel14.Top + 28;
-  ObjectivesLabel.Visible := False;
-
-  ImageMap.Clear;
-  
-  { clear values }
-  GameTypeLabel.Caption := '';
-  MapStyleLabel.Caption := '';
-  LocationLabel.Caption := '';
-  PlayersLabel.Caption := '';
-  DurationLabel.Caption := '';
-  DifficultyLabel.Caption := '';
-  PopulationLabel.Caption := '';
-  MapSizeLabel.Caption := '';
-  SpeedLabel.Caption := '';
-  LockDiplomacyLabel.Caption := '';
-  RevealMapLabel.Caption := '';
-  VictoryLabel.Caption := '';
-  POVLabel.Caption := '';
-  GameVersionLabel.Caption := '';
-  ScenarioFileLabel.Caption := '';
-  ScContentLabel.Caption := '';
-
-  AddCommentB := False;
-  CreateBackupB := True;
-  CommentMemo.Text := '';
-  CommentMemo.Enabled := True;
-end;
-
-procedure TMainForm.GeneralPaintBoxPaint(Sender: TObject);
-var
-  x, y: Integer;
-begin
-  { ...or Bitmap has no image assigned }
-  if not Assigned (BkgBitmap) or not BkgBitmap.HandleAllocated then
-    Exit;
-
-  if not (Sender is TPaintBox) then
-    Exit;
-
-  x := 0; y := 0;
-  while y < (Sender as TPaintBox).ClientHeight do
+  if (RecAnalyst.PreGameChatMessages.Count = 0)
+    and (RecAnalyst.InGameChatMessages.Count = 0)
+    and (RecAnalyst.Tributes.Count = 0) then
   begin
-    while x < (Sender as TPaintBox).ClientWidth do
-    begin
-      (Sender as TPaintBox).Canvas.Draw (x, y, BkgBitmap);
-      Inc (x, BkgBitmap.Width);
-    end;
-    Inc (y, BkgBitmap.Height);
-    x := 0;
-  end;
-end;
-
-procedure TMainForm.MapPaintBoxPaint(Sender: TObject);
-begin
-  if Assigned (MapBitmap) and MapBitmap.HandleAllocated then
-    (Sender as TPaintBox).Canvas.Draw (0, 0, MapBitmap);
-end;
-
-procedure TMainForm.SaveMapAsClick(Sender: TObject);
-var
-  SavePictureDialog: TSavePictureDialog;
-   PngObject: TPngObject;
-begin
-  if not Assigned (MapBitmap) or not MapBitmap.HandleAllocated then
+    ChatTabSheet.TabVisible := False;
     Exit;
-
-  SavePictureDialog := TSavePictureDialog.Create (Self);
-  try
-    // SavePictureDialog.InitialDir := ExtractFilePath (RecAnalyst.FileName);
-    SavePictureDialog.Filter := 'Portable Nework Graphics (*.png)|*.png|Bitmaps (*.bmp)|*.bmp';
-    SavePictureDialog.DefaultExt := 'png';
-    SavePictureDialog.FilterIndex := 1;
-    SavePictureDialog.Options := SavePictureDialog.Options + [ofOverwritePrompt, ofPathMustExist];
-
-    if SavePictureDialog.Execute then
-    begin
-      case SavePictureDialog.FilterIndex of
-        1: { png }
-          begin
-            PngObject := TPngObject.Create;
-            try
-              PngObject.Assign (MapBitmap);
-              PngObject.SaveToFile (SavePictureDialog.FileName);
-            finally
-              PngObject.Free;
-            end;
-          end;
-        2: { bmp }
-          begin
-            MapBitmap.SaveToFile (SavePictureDialog.FileName);
-          end;
-      end;
-    end;
-  finally
-    SavePictureDialog.Free;
   end;
-end;
 
-procedure TMainForm.BuildingsPaintBoxPaint(Sender: TObject);
-begin
-  if Assigned (BuildingsBitmap) and BuildingsBitmap.HandleAllocated then
-    BuildingsPaintBox.Canvas.Draw (0, 0, BuildingsBitmap);
-end;
-
-procedure TMainForm.UnitsPaintBoxPaint(Sender: TObject);
-begin
-  if Assigned (UnitsBitmap) and UnitsBitmap.HandleAllocated then
-    UnitsPaintBox.Canvas.Draw (0, 0, UnitsBitmap);
-end;
-
-procedure TMainForm.SaveasHTMLClick(Sender: TObject);
-var
-  HTML: TStringList;
-  SaveDialog: TSaveDialog;
-  HTMLText: String;
-begin
-  SaveDialog := TSaveDialog.Create (Self);
-  try
-    // SaveDialog.InitialDir := GetCurrentDir;
-    SaveDialog.Filter := 'HTML Files|*.html';
-    SaveDialog.DefaultExt := 'html';
-    SaveDialog.FilterIndex := 1;
-    SaveDialog.Options := SaveDialog.Options + [ofOverwritePrompt, ofPathMustExist];
-
-    if SaveDialog.Execute then
-    begin
-      HTML := TStringList.Create;
-      try
-        ChatWB.SaveToStrings (HTML);
-        try
-          HTMLText := TResourceDll.LoadString (HTMLTPL_RESNAME);
-        except
-          // error loading resource
-        end;
-        HTML.Text := Format (HTMLText, [ChatWB.HostCSS, HTML.Text]);
-        HTML.SaveToFile (SaveDialog.FileName);
-      finally
-        HTML.Free;
-      end;
-    end;
-
-  finally
-    SaveDialog.Free;
-  end;
-end;
-
-procedure TMainForm.ResPaintBoxPaint(Sender: TObject);
-begin
-  if Assigned (ResearchesBitmap) and ResearchesBitmap.HandleAllocated then
-    ResPaintBox.Canvas.Draw (0, 0, ResearchesBitmap);
-end;
-
-procedure TMainForm.ScBgPaintBoxPaint(Sender: TObject);
-begin
-  if Assigned (BkgWinBitmap) and BkgWinBitmap.HandleAllocated then
-    (Sender as TPaintBox).Canvas.Draw (0, 0, BkgWinBitmap);
-end;
-
-procedure TMainForm.BtnPaintBox1Paint(Sender: TObject);
-begin
-  if Assigned (TabDownBitmap) and TabDownBitmap.HandleAllocated then
+  ChatRichEdit.SelStart := 0;
+  if (RecAnalyst.PreGameChatMessages.Count > 0) then
   begin
-    case (Sender as TPaintBox).Tag of
-      0: (Sender as TPaintBox).Canvas.Draw (0, 0, TabDownBitmap);
-      1: (Sender as TPaintBox).Canvas.Draw (0, 0, TabUpBitmap);
-    else
-      (Sender as TPaintBox).Canvas.Draw (0, 0, TabUpBitmap);
-    end;
-  end;
-end;
-
-procedure TMainForm.BtnPaintBox1Click(Sender: TObject);
-begin
-  if ((Sender as TPaintBox).Tag = 0) then
-  begin
-    BtnPaintBox1.Tag := 0; BtnPaintBox1.Repaint;
-    BtnPaintBox2.Tag := 0; BtnPaintBox2.Repaint;
-    BtnPaintBox3.Tag := 0; BtnPaintBox3.Repaint;
-    BtnPaintBox4.Tag := 0; BtnPaintBox4.Repaint;
-
-    (Sender as TPaintBox).Tag := 1;
-    (Sender as TPaintBox).Repaint;
-
-    if (Sender = BtnPaintBox1) then
+    ChatRichEdit.SelAttributes.Style := [fsBold];
+    ChatRichEdit.SelText := 'pre-game chat:' + sLineBreak;
+    for i := 0 to RecAnalyst.PreGameChatMessages.Count - 1 do
     begin
-      HeaderLabel.Caption := 'General';
-      ScenarioMapPaintBox.Visible := True;
-      ScContentLabel.Top := ScenarioMapPaintBox.Top + ScenarioMapPaintBox.Height + 16;
-      ScContentLabel.Caption := Format ('Global Victory: %s'#13#10, [ScAnalyst.Victory.sVictory]);
-      if ScAnalyst.AllTechs then
-        ScContentLabel.Caption := ScContentLabel.Caption + 'All Techs: Yes'#13#10
+      M := RecAnalyst.PreGameChatMessages[i] as TChatMessage;
+      if Assigned(M.Player) then
+        ChatRichEdit.SelAttributes.Color := M.Player.Color
       else
-        ScContentLabel.Caption := ScContentLabel.Caption + 'All Techs: No'#13#10;
-      ScContentLabel.Caption := ScContentLabel.Caption + Format ('Original File Name: %s'#13#10, [ScAnalyst.OriginalFileName]);
-      ScContentLabel.Caption := ScContentLabel.Caption + Format ('Last Updated: %s'#13#10, [DateTimeToStr (ScAnalyst.LastSave)]);
-    end
-    else if (Sender = BtnPaintBox2) then
-    begin
-      HeaderLabel.Caption := 'Instructions';
-      ScContentLabel.Top := 0;
-      ScContentLabel.Caption := ScAnalyst.sInstructions;
-      ScenarioMapPaintBox.Visible := False;
-    end
-    else if (Sender = BtnPaintBox3) then
-    begin
-      HeaderLabel.Caption := 'Hints';
-      ScContentLabel.Top := 0;
-      ScContentLabel.Caption := ScAnalyst.sHints;
-      ScenarioMapPaintBox.Visible := False;
-    end
-    else if (Sender = BtnPaintBox4) then
-    begin
-      HeaderLabel.Caption := 'Scouts';
-      ScContentLabel.Top := 0;
-      ScContentLabel.Caption := ScAnalyst.sScouts;
-      ScenarioMapPaintBox.Visible := False;
+        ChatRichEdit.SelAttributes.Color := clBlack;
+      ChatRichEdit.SelText := M.Msg + sLineBreak;
     end;
-    HeaderLabel.Left := 140 + (490 - 140) div 2 - (HeaderLabel.ClientWidth div 2);
+  end;
+
+  Messages := GetSortedMessages();
+  try
+    if (Messages.Count = 0) then Exit;
+    ChatRichEdit.SelAttributes.Style := [fsBold];
+    ChatRichEdit.SelText := 'in-game chat:' + sLineBreak;
+    for i := 0 to Messages.Count - 1 do
+    begin
+      if (Messages[i] is TChatMessage) then
+      begin
+        M := Messages[i] as TChatMessage;
+        ChatRichEdit.SelText := Format('(%s) ', [TRecAnalyst.GameTimeToString(M.Time)]);
+        if Assigned(M.Player) then
+          ChatRichEdit.SelAttributes.Color := M.Player.Color
+        else begin
+          ChatRichEdit.SelAttributes.Color := clBlack;
+          ChatRichEdit.SelAttributes.Style := [fsItalic];
+        end;
+        ChatRichEdit.SelText := M.Msg + sLineBreak;
+      end else if (Messages[i] is TTribute) then
+      begin
+        T := TTribute(Messages[i]);
+        ChatRichEdit.SelText := Format('(%s) ', [TRecAnalyst.GameTimeToString(T.Time)]);
+        ChatRichEdit.SelAttributes.Style := [fsItalic];
+        ChatRichEdit.SelAttributes.Color := T.PlayerFrom.Color;
+        ChatRichEdit.SelText := T.PlayerFrom.Name;
+        ChatRichEdit.SelAttributes.Color := clBlack;
+        ChatRichEdit.SelText := Format(' has sent %d (-%d) %s to ' ,
+            [T.Amount, Round(T.Amount + (T.Amount * T.Fee)), T.Resource]);
+        ChatRichEdit.SelAttributes.Color := T.PlayerTo.Color;
+        ChatRichEdit.SelText := T.PlayerTo.Name + sLineBreak;
+      end;
+    end;
+  finally
+    Messages.Free();
   end;
 end;
 
-procedure TMainForm.JvLabel19Click(Sender: TObject);
+procedure TMainForm.FillGameSettings();
+var
+  Stream: TMemoryStream;
+  Png: TPngImage;
 begin
-  if (Sender = JvLabel19) then
-    BtnPaintBox1Click (BtnPaintBox1)
-  else if (Sender = JvLabel17) then
-    BtnPaintBox1Click (BtnPaintBox2)
-  else if (Sender = JvLabel18) then
-    BtnPaintBox1Click (BtnPaintBox3)
-  else if (Sender = JvLabel20) then
-    BtnPaintBox1Click (BtnPaintBox4);
+  with RecAnalyst.GameSettings do
+  begin
+    GameTypeLabel.Caption := GameType;
+    if RecAnalyst.GameSettings.IsScenario then
+      MapLabel.Caption := Trim(ChangeFileExt(RecAnalyst.GameSettings.ScFileName, ''))
+    else
+      MapLabel.Caption := Trim(Map);
+    PlayersLabel.Caption := PlayersType;
+    DurationLabel.Caption := RecAnalyst.GameTimeToString(PlayTime);
+    POVLabel.Caption := POV;
+    VersionLabel.Caption := Version;
+    MapStyleLabel.Caption := MapStyle;
+    MapSizeLabel.Caption := MapSize;
+    RevealMapLabel.Caption := RevealMap;
+    VictoryLabel.Caption := Victory;
+    SpeedLabel.Caption := GameSpeed;
+    PopulationLabel.Caption := IntToStr(PopLimit);
+    DifficultyLabel.Caption := DifficultyLevel;
+  end;
+
+  if RecAnalyst.GameSettings.IsScenario then
+  begin
+    Label13.Top := Label10.Top;
+    Label11.Top := Label9.Top;
+    Label10.Top := Label8.Top;
+    Label9.Top := Label7.Top;
+    DifficultyLabel.Top := Label13.Top;
+    SpeedLabel.Top := Label11.Top;
+    VictoryLabel.Top := Label10.Top;
+    RevealMapLabel.Top := Label9.Top;
+    Label7.Visible := False;
+    Label8.Visible := False;
+    Label12.Visible := False;
+    MapStyleLabel.Visible := False;
+    MapSizeLabel.Visible := False;
+    PopulationLabel.Visible := False;
+    ViewResultsLabel.Top := DetailsPanel.Top + DifficultyLabel.Top;
+    DetailsPanel.Height := DifficultyLabel.Top + DifficultyLabel.Height;
+  end;
+
+  Stream := RecAnalyst.GenerateMap(246, 123);
+  if Assigned(Stream) then
+  try
+    Png := TPngImage.Create();
+    try
+      Png.LoadFromStream(Stream);
+      MapImage.Picture.Assign(Png);
+    finally
+      Png.Free();
+    end;
+  finally
+    Stream.Free();
+  end;
 end;
 
-procedure TMainForm.PluginURLLabelClick(Sender: TObject);
+class function TMainForm.HintString(Player: TPlayer): String;
 begin
-  ShellExecute (Handle, 'open', PChar (PLUGIN_URL), nil, nil, SW_SHOWNORMAL);
+  Result := '';
+  if Player.IsCooping then Exit;
+  if (Player.FeudalTime > 0) then
+    Result := Format('Feudal: %s', [TRecAnalyst.GameTimeToString(Player.FeudalTime)]);
+  if (Player.CastleTime > 0) then
+    Result := Result + Format('%sCastle: %s', [sLineBreak, TRecAnalyst.GameTimeToString(
+        Player.CastleTime)]);
+  if (Player.ImperialTime > 0) then
+    Result := Result + Format('%sImperial: %s', [sLineBreak, TRecAnalyst.GameTimeToString(
+        Player.ImperialTime)]);
 end;
 
-procedure TMainForm.OSPaintBoxPaint(Sender: TObject);
+procedure TMainForm.FillPanel(Panel: TPanel);
+var
+  Player: TPlayer;
+  Image: TImage;
+  PngImage: TPngImage;
+  ResName: String;
 begin
-  if Assigned (OSBitmap) and OSBitmap.HandleAllocated then
-    (Sender as TPaintBox).Canvas.Draw (0, 0, OSBitmap);
+  if (Panel.Tag = 0) then
+    Panel.Visible := False
+  else begin
+    Player := TPlayer(Panel.Tag);
+    TLabel(Panel.Controls[1]).Caption := Player.Name;
+    TLabel(Panel.Controls[2]).Font.Color := Player.Color;
+    TLabel(Panel.Controls[2]).Caption := Player.Civ;
+
+    PngImage := TPngImage.Create();
+    try
+      try
+        ResName := Format('%d_%s', [Player.ColorId, Player.Civ]);
+        PngImage.LoadFromResourceName(DllHandle, ResName);
+        Image := Panel.Controls[0] as TImage;
+        Image.Picture.Assign(PngImage);
+        Image.Hint := HintString(Player);
+      except
+        //
+      end;
+    finally
+      PngImage.Free();
+    end;
+  end;
 end;
 
-procedure TMainForm.OSPaintBoxClick(Sender: TObject);
+procedure TMainForm.FillPlayers();
+var
+  i, split_idx, idx, max_height: Integer;
+  Panels: array[0..15] of TPanel;
+  PP, NP: TPlayer;
+  Panel: TPanel;
 begin
-  ShellExecute (Handle, 'open', PChar (OS_URL), nil, nil, SW_SHOWNORMAL);
+  for i := Low(Panels) to High(Panels) do
+    Panels[i] := FindComponent('Panel' + IntToStr(i + 1)) as TPanel;
+
+  PP := nil; split_idx := -1;
+  if RecAnalyst.GameSettings.IsFFA then
+  begin
+    split_idx := (RecAnalyst.Players.Count div 2) + (RecAnalyst.Players.Count mod 2);
+  end else
+  begin
+    for i := 0 to RecAnalyst.Players.Count - 1 do
+    begin
+      NP := RecAnalyst.Players[i] as TPlayer;
+      if not Assigned(PP) then
+      begin
+        PP := NP; Continue;
+      end;
+      if (NP.Team <> PP.Team) or ((NP.Team = 0) and (NP.Team = PP.Team) and (NP.Index <> PP.Index)) then
+      begin
+        split_idx := i; Break;
+      end;
+    end;
+  end;
+
+  for i := 0 to RecAnalyst.Players.Count - 1 do
+  begin
+    if (i < split_idx) then idx := i else idx := 8 + (i - split_idx);
+    Panels[idx].Tag := NativeInt(RecAnalyst.Players[i]);
+  end;
+
+  max_height := 0;
+  for i := Low(Panels) to High(Panels) do
+  begin
+    Panel := Panels[i];
+    FillPanel(Panel);
+    if Panel.Visible and (Panel.Top + Panel.Height > max_height) then
+      max_height := Panel.Top + Panel.Height;
+  end;
+  TeamsGroupBox.Height := max_height + Panel1.Top;
 end;
 
-procedure TMainForm.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
-  Y: Integer);
+procedure TMainForm.FillResearches();
+var
+  i, idx: Integer;
+  P: TPlayer;
+  L: TLabel;
 begin
-  TrackMouse;
+  if (RecAnalyst.Researches.Count = 0) then
+  begin
+    ResearchesTabSheet.TabVisible := False;
+    Exit;
+  end;
+
+  idx := 0;
+  for i := 0 to RecAnalyst.Players.Count - 1 do
+  begin
+    P := RecAnalyst.Players[i] as TPlayer;
+    if P.IsCooping then Continue;
+    L := TLabel(PlayersPanel.Controls[idx]);
+    L.Caption := P.Name;
+    L.Font.Color := P.Color;
+    L.Hint := P.Civ;
+    Inc(idx);
+  end;
+  L := TLabel(PlayersPanel.Controls[idx]);
+  L.Caption := 'minute';
+  L.Font.Style := [];
+  L.Top := L.Top - 6;
+  L.Hint := 'Minute, in which player began to research the technology.';
+
+  for i := idx + 1 to PlayersPanel.ControlCount - 1 do
+  begin
+    if (PlayersPanel.Controls[i] is TLabel) then
+      PlayersPanel.Controls[i].Visible := False;
+  end;
+
+  GenerateResearches();
+
+  ScrollBox.Width := ResearchesGroupBox.Width - ScrollBox.Left - PlayersPanel.Left;
+  ScrollBox.Anchors := [akLeft, akTop, akRight];
 end;
 
-procedure TMainForm.ResPaintBoxMouseMove(Sender: TObject;
+procedure TMainForm.CollapseDetails();
+begin
+  GameSettingsGroupBox.Height := MapImage.Top + MapImage.Height + MapImage.Top;
+  DetailsPanel.Visible := False;
+  DetailsLabel.Caption := '↓ more...';
+end;
+
+procedure TMainForm.DetailsLabelClick(Sender: TObject);
+begin
+  ToggleDetails();
+end;
+
+procedure TMainForm.ExpandDetails();
+begin
+  GameSettingsGroupBox.Height := DetailsPanel.Top + DetailsPanel.Height + GameTypeLabel.Top;
+  DetailsPanel.Visible := True;
+  DetailsLabel.Caption := '↑ less...';
+end;
+
+procedure TMainForm.ToggleDetails();
+begin
+  if DetailsPanel.Visible then
+    CollapseDetails()
+  else
+    ExpandDetails();
+
+  TeamsGroupBox.Top := GameSettingsGroupBox.Top + GameSettingsGroupBox.Height
+    + TeamsGroupBox.Left;
+end;
+
+procedure TMainForm.PageControlChange(Sender: TObject);
+begin
+  if (PageControl.ActivePage = ChatTabSheet) then
+  begin
+    ChatRichEdit.CaretPos := Point(0, 0);
+    ChatRichEdit.SetFocus;
+  end;
+end;
+
+procedure TMainForm.ResearchesImageMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 var
   i, idx: Integer;
   Item: TImageMapItem;
-  p: TPoint;
 begin
-  if not Assigned (ResearchesBitmap) or not ResearchesBitmap.HandleAllocated then
-    Exit;
+  if not Assigned(ResearchesImage.Picture) then Exit;
 
   idx := -1;
   Item := nil;
@@ -1659,155 +742,235 @@ begin
     end;
   end;
 
-  if (idx <> -1) and Assigned (Item) then
+  if (idx <> -1) and Assigned(Item) then
   begin
-    GetCursorPos (p);
-    HintForm.Left := p.X + 8;
-    HintForm.Top := p.Y + 8;
-    HintForm.Text := Item.Hint;
-    HintForm.IsVisible := True;
-  end else
-    if HintForm.IsVisible then
-      HintForm.IsVisible := False;
-end;
-
-procedure TMainForm.CheckBox1PaintBoxClick(Sender: TObject);
-begin
-  AddCommentB := not AddCommentB;
-  CommentMemo.Enabled := AddCommentB;
-  CheckBox1PaintBox.Repaint;
-end;
-
-procedure TMainForm.CheckBox1PaintBoxPaint(Sender: TObject);
-begin
-  if AddCommentB then
-  begin
-    if Assigned (CheckedBitmap) and CheckedBitmap.HandleAllocated then
-      (Sender as TPaintBox).Canvas.Draw (0, 0, CheckedBitmap);
+    ResearchesImage.ShowHint := False;
+    ResearchesImage.ShowHint := True;
+    ResearchesImage.Hint := Item.Hint;
   end else
   begin
-    if Assigned (UncheckedBitmap) and UncheckedBitmap.HandleAllocated then
-      (Sender as TPaintBox).Canvas.Draw (0, 0, UncheckedBitmap);
+    ResearchesImage.Hint := '';
+    ResearchesImage.ShowHint := False;
   end;
 end;
 
-procedure TMainForm.CheckBox2PaintBoxClick(Sender: TObject);
-begin
-  CreateBackupB := not CreateBackupB;
-  CheckBox2PaintBox.Repaint;
-end;
-
-procedure TMainForm.CheckBox2PaintBoxPaint(Sender: TObject);
-begin
-  if CreateBackupB then
-  begin
-    if Assigned (CheckedBitmap) and CheckedBitmap.HandleAllocated then
-      (Sender as TPaintBox).Canvas.Draw (0, 0, CheckedBitmap);
-  end else
-  begin
-    if Assigned (UncheckedBitmap) and UncheckedBitmap.HandleAllocated then
-      (Sender as TPaintBox).Canvas.Draw (0, 0, UncheckedBitmap);
-  end;
-end;
-
-procedure TMainForm.UpdateBtnPaintBoxClick(Sender: TObject);
+procedure TMainForm.ResearchesTabSheetResize(Sender: TObject);
 var
-  FileName, CommentString: String;
-  fh: Integer;
-  fdate: Integer;
-const
-  BACKUP_EXT = '.backup';
+  Width: Integer;
 begin
-  CommentMemo.Text := Trim (CommentMemo.Text);
-  if (Length (CommentMemo.Text) > MAX_COMMENT_LEN) then
-    CommentMemo.Text := Copy (CommentMemo.Text, 1, MAX_COMMENT_LEN);
-
-  if AddCommentB then
-    CommentString := CommentMemo.Text
+  Width := ResearchesGroupBox.Left + ScrollBox.Left + ResearchesImage.Width;
+  if (Width + 32 > ResearchesTabSheet.ClientWidth) then
+    ResearchesGroupBox.Width := ResearchesTabSheet.ClientWidth - 2 * ResearchesGroupBox.Left
   else
-    CommentString := '';
+    ResearchesGroupBox.Width := Width;
+end;
 
-  if (CommentMemo.Text = '') then
-  begin
-    AddCommentB := False;
-    CommentMemo.Enabled := AddCommentB;
-    CheckBox1PaintBox.Repaint;
+procedure TMainForm.ScrollBoxResize(Sender: TObject);
+begin
+  if ScrollBox.HorzScrollBar.IsScrollBarVisible then
+    ScrollBox.Height := ResearchesImage.Height + 20
+  else
+    ScrollBox.Height := ResearchesImage.Height;
+  ResearchesGroupBox.ClientHeight := ScrollBox.Height + 2 * ScrollBox.Top;
+end;
+
+procedure TMainForm.GenerateResearches();
+type
+  TImageData = record
+    Points: TPointDynArray;
+    Size: TSize;
   end;
 
-  if CommentString = RecAnalyst.CommentString then
-    Exit;
+function Calculate(RecAnalyst: TRecAnalyst): TImageData;
+var
+  R: TResearch;
+  P: TPlayer;
+  prev_minute, minute, max: Integer;
+  res_cnt: array[1..8] of Integer; // player_id in <1, 8>
+  line: array[1..8] of Integer; // player_id in <1, 8>
+  dst_x, dst_y, delta, count, i, idx: Integer;
+const
+  RTW = 28; { resource tile width }
+  RTH = 28; { resource tile height }
+  HSPACING = 3; { horizontal spacing }
+  VSPACING = 3; { vertical spacing }
+begin
+  Result.Points := nil;
+  Result.Size.cx := 0;
+  Result.Size.cy := 0;
 
-  FileName := RecAnalyst.FileName;
+  if (RecAnalyst.Researches.Count = 0) then Exit;
+
+  SetLength(Result.Points, RecAnalyst.Researches.Count);
+  FillChar(res_cnt, SizeOf(res_cnt), 0);
+  count := 0;
+  for i := 0 to RecAnalyst.Players.Count - 1 do
+  begin
+    if not TPlayer(RecAnalyst.Players[i]).IsCooping then
+      Inc(count);
+  end;
+
+  Result.Size.cy := count * (RTH + VSPACING) + 20; { height for minutes }
+
+  idx := 0;
+  for i := 0 to RecAnalyst.Players.Count - 1 do
+  begin
+    P := RecAnalyst.Players[i] as TPlayer;
+    if P.IsCooping then Continue;
+    line[P.Index] := idx;
+    Inc(idx);
+  end;
+
+  max := 0;  { max = res_cnt[i]; forall j<>i: res_cnt[j] <= res_cnt[i] }
+  dst_x := 0;
+  FillChar(res_cnt, SizeOf(res_cnt), 0);  { holds # of resources for each player in current minute }
+
+  prev_minute := -1;
+  for i := 0 to RecAnalyst.Researches.Count - 1 do
+  begin
+    R := RecAnalyst.Researches[i] as TResearch;
+    { minute = current minute in timeline (minute-based sampling) }
+    minute := Floor(R.Time / 1000 / 60);
+    { new minute has just started, rember researches are time-sorted }
+    if (prev_minute <> minute) then
+    begin
+      FillChar(res_cnt, SizeOf(res_cnt), 0); { zero }
+      Inc(dst_x, max * (RTW + HSPACING));  { shift position on maximum }
+      max := 0;  { zero }
+    end;
+    prev_minute := minute;
+
+    delta := res_cnt[R.Player.Index] * (RTW + HSPACING);
+    dst_y := line[R.Player.Index] * (RTH + VSPACING);
+
+    { increase # of resources for its 'owner' }
+    Inc(res_cnt[R.Player.Index]);
+    { set maximum if we have new one }
+    if (max < res_cnt[R.Player.Index]) then
+      max := res_cnt[R.Player.Index];
+
+    Result.Points[i].X := dst_x + delta;
+    Result.Points[i].Y := dst_y;
+  end;
+
+  Inc(dst_x, max * (RTW + HSPACING));
+  Result.Size.cx := dst_x;
+end;
+
+var
+  R: TResearch;
+  prev_minute, minute: Integer;
+  i, y: Integer;
+
+  Bitmap: TGPBitmap;
+  Bmp: TGPBitmap;
+  Graphics: TGPGraphics;
+  encoderClsid: TGUID;
+
+  Item: TImageMapItem;
+
+  ImageData: TImageData;
+
+  Res : TResourceStream;
+  StreamInf: IStream;
+  MemoryStream: TMemoryStream;
+
+  FontFamily: TGPFontFamily;
+  Font: TGPFont;
+  Brush: TGPBrush;
+  Pen: TGPPen;
+  Origin: TGPPointF;
+
+  Png: TPngImage;
+const
+  RTW = 28; { resource tile width }
+  RTH = 28; { resource tile height }
+  HSPACING = 3; { horizontal spacing }
+  VSPACING = 3; { vertical spacing }
+  c_min = '%d.';
+begin
+  ImageData := Calculate(RecAnalyst);
+  if not Assigned(ImageData.Points) then Exit;
+
+  InitializeGdiplus();
+
+  Bitmap := TGPBitmap.Create(ImageData.Size.cx, ImageData.Size.cy);
+  Graphics := TGPGraphics.Create(Bitmap);
   try
-    fdate := 0;
-    fh := FileOpen (FileName, fmOpenRead);
-    if (fh > 0) then
-      fdate := FileGetDate (fh);
-    FileClose (fh);
+    Graphics.SetTextRenderingHint(TextRenderingHintAntiAlias);
 
-    if CreatebackupB then
-    begin
-      if FileExists (FileName + BACKUP_EXT) then
-        if MessageDlg ('Backup file already exists. Overwrite file?',
-            mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-          if not DeleteFile (FileName + BACKUP_EXT) then
-            ShowMessage ('Unable to delete file.');
+    Brush:= TGPSolidBrush.Create(MakeColor(0, 0, 0));
+    Pen := TGPPen.Create(MakeColor(213, 223, 229));
+    FontFamily := TGPFontFamily.Create(WideString('Tahoma'));
+    Font := TGPFont.Create(FontFamily, 12, FontStyleRegular, UnitPixel);
+    try
+      prev_minute := -1;
+      for i := 0 to RecAnalyst.Researches.Count - 1 do
+      begin
+        R := RecAnalyst.Researches[i] as TResearch;
+        minute := Floor(R.Time / 1000 / 60);
+        try
+          try
+            Res := TResourceStream.Create(DllHandle, R.ResourceName, RT_RCDATA);
+            StreamInf := TStreamAdapter.Create(Res, soOwned);
+            Bmp := TGPBitmap.Create(StreamInf);
+            Graphics.DrawImage(Bmp, ImageData.Points[i]);
+          except
+            //
+          end;
+        finally
+          StreamInf := nil;
+          if Assigned(Bmp) then FreeAndNil(Bmp);
+        end;
 
-      if not RenameFile (FileName, FileName + BACKUP_EXT) then
-        if MessageDlg ('Unable to create backup file. Do you wish to continue?',
-            mtConfirmation, [mbYes, mbNo], 0) = mrNo then
-          Exit;
+        if (minute <> prev_minute) then
+        begin
+          Origin.X := ImageData.Points[i].X;
+          Origin.Y := ImageData.Size.cy - 20;
+          Graphics.DrawString(WideString(Format(c_min, [minute + 1])), -1, Font, Origin, Brush);
+          Graphics.DrawLine(Pen, Origin.X - 2, 0, Origin.X - 2, ImageData.Size.cy);
+          prev_minute := minute;
+        end;
+        Item := TImageMapItem.Create();
+        Item.Coordinates := Rect(ImageData.Points[i].X, ImageData.Points[i].Y,
+          ImageData.Points[i].X + RTW, ImageData.Points[i].Y + RTH);
+        Item.Hint := Format('(%s) %s', [TRecAnalyst.GameTimeToString(R.Time), R.Name]);
+        ImageMap.Add(Item);
+      end;
+      //Graphics.DrawLine(Pen, ImageData.Size.cx - 2, 0, ImageData.Size.cx - 2, ImageData.Size.cy);
+      y := RTH + 1;
+      while (y < ImageData.Size.cy) do
+      begin
+        Graphics.DrawLine(Pen, 0, y, ImageData.Size.cx - 2, y);
+        Inc(y, RTH + VSPACING);
+      end;
+    finally
+      Brush.Free();
+      Pen.Free();
+      FontFamily.Free();
+      Font.Free();
     end;
 
-    if RecAnalyst.AddComment (CommentString) then
-      RecAnalyst.Build (FileName)
-    else
-      ShowMessage ('Unable to update comment.');
+    GetEncoderClsid('image/png', encoderClsid);
 
-    FileSetDate (FileName, fdate);
-  except
-    on E: Exception do
-    begin
-      Logger.SendException(E);
-      ShowMessage ('Unable to update comment.');
+    try
+      MemoryStream := TMemoryStream.Create();
+      StreamInf := TStreamAdapter.Create(MemoryStream, soOwned);
+      Bitmap.Save(StreamInf, encoderClsid);
+      MemoryStream.Position := 0;
+
+      Png := TPngImage.Create();
+      Png.LoadFromStream(MemoryStream);
+      ResearchesImage.Picture.Assign(Png);
+    finally
+      StreamInf := nil;
+      if Assigned(Png) then FreeAndNil(Png);
     end;
-  end;
-end;
-
-procedure TMainForm.UpdateBtnPaintBoxMouseDown(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-  if not UpdateDown and (ssLeft in Shift) then
-  begin
-    UpdateDown := True;
-    UpdateBtnPaintBox.Repaint;
-    UpdateLabel.Left := UpdateLabel.Left + 1;
-    UpdateLabel.Top := UpdateLabel.Top + 1;
-  end;
-end;
-
-procedure TMainForm.UpdateBtnPaintBoxMouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-  if UpdateDown then
-  begin
-    UpdateDown := False;
-    UpdateBtnPaintBox.Repaint;
-    UpdateLabel.Left := UpdateLabel.Left - 1;
-    UpdateLabel.Top := UpdateLabel.Top - 1;
-  end;
-end;
-
-procedure TMainForm.UpdateBtnPaintBoxPaint(Sender: TObject);
-begin
-  if UpdateDown then
-  begin
-    if Assigned (BtnDownBitmap) and BtnDownBitmap.HandleAllocated then
-      (Sender as TPaintBox).Canvas.Draw (0, 0, BtnDownBitmap);
-  end else
-  begin
-    if Assigned (BtnUpBitmap) and BtnUpBitmap.HandleAllocated then
-      (Sender as TPaintBox).Canvas.Draw (0, 0, BtnUpBitmap);
+  finally
+    SetLength(ImageData.Points, 0);
+    Bitmap.Free();
+    Graphics.Free();
+    FinalizeGdiplus();
   end;
 end;
 

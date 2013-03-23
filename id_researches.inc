@@ -1,22 +1,22 @@
-(*
+{*
  * $Id$
  * This file is part of the A2LView project.
  *
- * Copyright (c) 2009-2010 biegleux <biegleux[at]gmail[dot]com>
+ * Copyright (c) 2009-2013 biegleux <biegleux[at]gmail[dot]com>
  *
- * This program is free software; you can redistribute it and/or modify
+ * This plugin is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This plugin is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, see <http://www.gnu.org/licenses>.
- *)
+ * along with this plugin; if not, see <http://www.gnu.org/licenses>.
+ *}
 { research ids }
 const
   // town center
@@ -64,7 +64,7 @@ const
   riGuardTower          = 140;
   riHeatedShot          = 380;
   riMurderHoles         = 322;
-  riTrademillCrane      = 54;
+  riTreadmillCrane      = 54;
   riArchitecture        = 51;
   riChemistry           = 47;
   riSiegeEngineers      = 377;
@@ -177,3 +177,40 @@ const
   riCrenellations       = 11;
   riArtillery           = 10;
   riBerserkergang       = 49;
+  // AoFE
+  riHuntingDogs         = 526;
+  riImperialCamel       = 521;
+  riCouriers            = 517;
+  riAndeanSling         = 516;
+  riRecurveBow          = 515;
+  riMercenaries         = 514;
+  riDruzhina            = 513;
+  riOrthodoxy           = 512;
+  riShatagni            = 507;
+  riSultans             = 506;
+  riSilkRoad            = 499;
+  riPavise              = 494;
+  riChivalry            = 493;
+  riInquisition         = 492;
+  riSipahi              = 491;
+  riMadrasah            = 490;
+  riIronclad            = 489;
+  riBoilingOil          = 488;
+  riNomads              = 487;
+  riPanokseon           = 486;
+  riTlatoani            = 485;
+  riMarauders           = 484;
+  riStronghold          = 483;
+  riGreekFire           = 464;
+  riChieftains          = 463;
+  riGreatWall           = 462;
+  riWarwolf             = 461;
+  riAtlatl              = 460;
+  riEagleWarrior        = 384;
+  riGillnets            = 494;
+  riEliteKamayuk        = 509;
+  riEliteBoyar          = 504;
+  riEliteElephantArcher = 481;
+  riEliteMagyarHuszar   = 472;
+  riEliteGenoeseCrossbowman = 468;
+

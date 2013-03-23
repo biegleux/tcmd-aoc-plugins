@@ -1,27 +1,25 @@
 object MainForm: TMainForm
-  Left = 207
-  Top = 59
-  Width = 878
-  Height = 640
+  Left = 0
+  Top = 0
+  ClientHeight = 638
+  ClientWidth = 677
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  OnActivate = FormActivate
+  Position = poDesktopCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnMouseMove = FormMouseMove
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object MainPanel: TPanel
     Left = 0
     Top = 0
-    Width = 862
-    Height = 602
+    Width = 677
+    Height = 638
     Align = alClient
     BevelOuter = bvNone
     ParentBackground = False
@@ -29,1324 +27,1294 @@ object MainForm: TMainForm
     object PageControl: TPageControl
       Left = 0
       Top = 0
-      Width = 863
-      Height = 604
+      Width = 677
+      Height = 638
       ActivePage = GeneralTabSheet
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Lucida Blackletter'
-      Font.Style = []
-      HotTrack = True
-      MultiLine = True
-      ParentFont = False
+      Align = alClient
       TabOrder = 0
+      OnChange = PageControlChange
       object GeneralTabSheet: TTabSheet
         Caption = 'General'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Lucida Blackletter'
-        Font.Style = []
-        ParentFont = False
-        object GeneralScrollBox: TScrollBox
-          Left = 0
-          Top = 0
-          Width = 855
-          Height = 574
-          Align = alClient
-          BorderStyle = bsNone
-          Color = clBtnHighlight
-          ParentColor = False
+        object GameSettingsGroupBox: TGroupBox
+          Left = 16
+          Top = 16
+          Width = 438
+          Height = 237
           TabOrder = 0
-          object GeneralPaintBox: TPaintBox
-            Left = 0
-            Top = 0
-            Width = 855
-            Height = 574
-            Align = alClient
+          DesignSize = (
+            438
+            237)
+          object MapImage: TImage
+            Left = 184
+            Top = 8
+            Width = 246
+            Height = 123
+          end
+          object Label1: TLabel
+            Left = 16
+            Top = 16
+            Width = 58
+            Height = 13
+            Caption = 'Game Type:'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
-            Font.Name = 'Lucida Blackletter'
+            Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            OnPaint = GeneralPaintBoxPaint
           end
-          object GSLabel: TJvLabel
-            Left = 12
-            Top = 12
-            Width = 96
-            Height = 17
-            Caption = 'Game Settings:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = 13390596
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel1: TJvLabel
-            Left = 24
+          object Label2: TLabel
+            Left = 16
             Top = 32
-            Width = 63
-            Height = 16
-            Caption = 'Game Type:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
+            Width = 24
+            Height = 13
+            Caption = 'Map:'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
           end
-          object JvLabel2: TJvLabel
-            Left = 24
+          object Label3: TLabel
+            Left = 16
             Top = 48
-            Width = 56
-            Height = 16
-            Caption = 'Map Style:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel3: TJvLabel
-            Left = 24
-            Top = 64
-            Width = 47
-            Height = 16
-            Caption = 'Location:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel4: TJvLabel
-            Left = 24
-            Top = 80
-            Width = 45
-            Height = 16
+            Width = 39
+            Height = 13
             Caption = 'Players:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel5: TJvLabel
-            Left = 24
-            Top = 96
-            Width = 50
-            Height = 16
-            Caption = 'Duration:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel6: TJvLabel
-            Left = 24
-            Top = 112
-            Width = 53
-            Height = 16
-            Caption = 'Difficulty:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel7: TJvLabel
-            Left = 24
-            Top = 128
-            Width = 59
-            Height = 16
-            Caption = 'Population:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel8: TJvLabel
-            Left = 24
-            Top = 144
-            Width = 51
-            Height = 16
-            Caption = 'Map Size:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel9: TJvLabel
-            Left = 24
-            Top = 160
-            Width = 33
-            Height = 16
-            Caption = 'Speed:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel10: TJvLabel
-            Left = 24
-            Top = 176
-            Width = 84
-            Height = 16
-            Caption = 'Lock Diplomacy:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel11: TJvLabel
-            Left = 24
-            Top = 192
-            Width = 65
-            Height = 16
-            Caption = 'Reveal Map:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object POVLabel: TLabel
-            Left = 112
-            Top = 224
-            Width = 23
-            Height = 14
-            Caption = 'pov'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
+            Font.Name = 'Tahoma'
+            Font.Style = []
             ParentFont = False
-            ShowAccelChar = False
-            Transparent = True
           end
-          object TeamsLabel: TJvLabel
-            Left = 12
-            Top = 284
-            Width = 47
-            Height = 17
-            Caption = 'Teams:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = 13390596
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object MapPaintBox: TPaintBox
-            Left = 176
-            Top = 40
-            Width = 306
-            Height = 153
-            OnPaint = MapPaintBoxPaint
-          end
-          object PlayersLabel: TLabel
-            Left = 112
-            Top = 80
-            Width = 49
-            Height = 14
-            Caption = 'players'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
-          end
-          object DurationLabel: TLabel
-            Left = 112
-            Top = 96
-            Width = 59
-            Height = 14
-            Caption = 'duration'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
-          end
-          object DifficultyLabel: TLabel
-            Left = 112
-            Top = 112
-            Width = 62
-            Height = 14
-            Caption = 'difficulty'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
-          end
-          object PopulationLabel: TLabel
-            Left = 112
-            Top = 128
-            Width = 72
-            Height = 14
-            Caption = 'population'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
-          end
-          object MapSizeLabel: TLabel
-            Left = 112
-            Top = 144
-            Width = 57
-            Height = 14
-            Caption = 'map-size'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
-          end
-          object SpeedLabel: TLabel
-            Left = 112
-            Top = 160
-            Width = 36
-            Height = 14
-            Caption = 'speed'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
-          end
-          object LockDiplomacyLabel: TLabel
-            Left = 112
-            Top = 176
-            Width = 98
-            Height = 14
-            Caption = 'lock-diplomacy'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
-          end
-          object LocationLabel: TLabel
-            Left = 112
+          object Label4: TLabel
+            Left = 16
             Top = 64
-            Width = 53
-            Height = 14
-            Caption = 'location'
+            Width = 45
+            Height = 13
+            Caption = 'Duration:'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
+            Font.Name = 'Tahoma'
+            Font.Style = []
             ParentFont = False
-            ShowAccelChar = False
-            Transparent = True
           end
-          object MapStyleLabel: TLabel
-            Left = 112
-            Top = 48
-            Width = 65
-            Height = 14
-            Caption = 'map-style'
+          object Label5: TLabel
+            Left = 16
+            Top = 80
+            Width = 24
+            Height = 13
+            Caption = 'POV:'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
+            Font.Name = 'Tahoma'
+            Font.Style = []
             ParentFont = False
-            Transparent = True
+          end
+          object Label6: TLabel
+            Left = 16
+            Top = 96
+            Width = 39
+            Height = 13
+            Caption = 'Version:'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
           end
           object GameTypeLabel: TLabel
-            Left = 112
-            Top = 32
-            Width = 68
-            Height = 14
+            Left = 80
+            Top = 16
+            Width = 63
+            Height = 13
             Caption = 'game-type'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
-          end
-          object JvLabel13: TJvLabel
-            Left = 24
-            Top = 224
-            Width = 31
-            Height = 16
-            Caption = 'POV:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object ScenarioFileLabel: TLabel
-            Left = 112
-            Top = 256
-            Width = 81
-            Height = 14
-            Caption = 'scenario-file'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
+            Font.Name = 'Tahoma'
             Font.Style = [fsBold]
             ParentFont = False
             ShowAccelChar = False
-            Transparent = True
           end
-          object JvLabel14: TJvLabel
-            Left = 24
-            Top = 240
-            Width = 73
-            Height = 16
-            Caption = 'Game Version:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
+          object MapLabel: TLabel
+            Left = 80
+            Top = 32
+            Width = 25
+            Height = 13
+            Caption = 'map'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ShowAccelChar = False
           end
-          object JvLabel15: TJvLabel
-            Left = 24
+          object PlayersLabel: TLabel
+            Left = 80
+            Top = 48
+            Width = 42
+            Height = 13
+            Caption = 'players'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ShowAccelChar = False
+          end
+          object DurationLabel: TLabel
+            Left = 80
+            Top = 64
+            Width = 48
+            Height = 13
+            Caption = 'duration'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ShowAccelChar = False
+          end
+          object POVLabel: TLabel
+            Left = 80
+            Top = 80
+            Width = 21
+            Height = 13
+            Caption = 'pov'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ShowAccelChar = False
+          end
+          object VersionLabel: TLabel
+            Left = 80
+            Top = 96
+            Width = 42
+            Height = 13
+            Caption = 'version'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ShowAccelChar = False
+          end
+          object DetailsLabel: TLabel
+            Left = 371
+            Top = 115
+            Width = 48
+            Height = 13
+            Cursor = crHandPoint
+            Anchors = [akTop, akRight]
+            AutoSize = False
+            Caption = #8595'more...'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsUnderline]
+            ParentFont = False
+            OnClick = DetailsLabelClick
+            ExplicitLeft = 378
+          end
+          object ViewResultsLabel: TLabel
+            Left = 367
+            Top = 208
+            Width = 52
+            Height = 13
+            Cursor = crHandPoint
+            Anchors = [akTop, akRight]
+            Caption = 'view result'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsUnderline]
+            ParentFont = False
+            OnClick = ViewResultsLabelClick
+          end
+          object DetailsPanel: TPanel
+            Left = 16
+            Top = 112
+            Width = 335
+            Height = 109
+            BevelOuter = bvNone
+            TabOrder = 0
+            object Label7: TLabel
+              Left = 0
+              Top = 0
+              Width = 51
+              Height = 13
+              Caption = 'Map Style:'
+            end
+            object Label8: TLabel
+              Left = 0
+              Top = 16
+              Width = 46
+              Height = 13
+              Caption = 'Map Size:'
+            end
+            object Label9: TLabel
+              Left = 0
+              Top = 32
+              Width = 60
+              Height = 13
+              Caption = 'Reveal Map:'
+            end
+            object Label10: TLabel
+              Left = 0
+              Top = 48
+              Width = 37
+              Height = 13
+              Caption = 'Victory:'
+            end
+            object Label11: TLabel
+              Left = 0
+              Top = 64
+              Width = 34
+              Height = 13
+              Caption = 'Speed:'
+            end
+            object Label12: TLabel
+              Left = 0
+              Top = 80
+              Width = 54
+              Height = 13
+              Caption = 'Population:'
+            end
+            object Label13: TLabel
+              Left = 0
+              Top = 96
+              Width = 46
+              Height = 13
+              Caption = 'Difficulty:'
+            end
+            object MapStyleLabel: TLabel
+              Left = 64
+              Top = 0
+              Width = 58
+              Height = 13
+              Caption = 'map-style'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object MapSizeLabel: TLabel
+              Left = 64
+              Top = 16
+              Width = 52
+              Height = 13
+              Caption = 'map-size'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object RevealMapLabel: TLabel
+              Left = 64
+              Top = 32
+              Width = 66
+              Height = 13
+              Caption = 'reveal-map'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object VictoryLabel: TLabel
+              Left = 64
+              Top = 48
+              Width = 40
+              Height = 13
+              Caption = 'victory'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object SpeedLabel: TLabel
+              Left = 64
+              Top = 64
+              Width = 34
+              Height = 13
+              Caption = 'speed'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object PopulationLabel: TLabel
+              Left = 64
+              Top = 80
+              Width = 60
+              Height = 13
+              Caption = 'population'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object DifficultyLabel: TLabel
+              Left = 64
+              Top = 96
+              Width = 49
+              Height = 13
+              Caption = 'difficulty'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+          end
+        end
+        object TeamsGroupBox: TGroupBox
+          Left = 16
+          Top = 267
+          Width = 438
+          Height = 340
+          TabOrder = 1
+          object Panel16: TPanel
+            Left = 236
+            Top = 296
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 15
+            object Image16: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label44: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label45: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
+          end
+          object Panel1: TPanel
+            Left = 16
+            Top = 16
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 0
+            object Image1: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label14: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label15: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
+          end
+          object Panel2: TPanel
+            Left = 16
+            Top = 56
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 1
+            object Image2: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label16: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label17: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
+          end
+          object Panel3: TPanel
+            Left = 16
+            Top = 96
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 2
+            object Image3: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label18: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label19: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
+          end
+          object Panel4: TPanel
+            Left = 16
+            Top = 136
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 3
+            object Image4: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label20: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label21: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
+          end
+          object Panel5: TPanel
+            Left = 16
+            Top = 176
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 4
+            object Image5: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label22: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label23: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
+          end
+          object Panel6: TPanel
+            Left = 16
+            Top = 216
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 5
+            object Image6: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label24: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label25: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
+          end
+          object Panel7: TPanel
+            Left = 16
             Top = 256
-            Width = 67
-            Height = 16
-            Caption = 'Scenario File:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 6
+            object Image7: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label26: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label27: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
           end
-          object RevealMapLabel: TLabel
-            Left = 112
-            Top = 192
-            Width = 75
-            Height = 14
-            Caption = 'reveal-map'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
+          object Panel8: TPanel
+            Left = 16
+            Top = 296
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 7
+            object Image8: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label28: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label29: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
           end
-          object GameVersionLabel: TLabel
-            Left = 112
-            Top = 240
-            Width = 88
-            Height = 14
-            Caption = 'game-version'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
+          object Panel9: TPanel
+            Left = 236
+            Top = 16
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 8
+            object Image9: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label30: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label31: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
           end
-          object JvLabel12: TJvLabel
-            Left = 24
-            Top = 208
-            Width = 41
-            Height = 16
-            Caption = 'Victory:'
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -11
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
+          object Panel10: TPanel
+            Left = 236
+            Top = 56
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 9
+            object Image10: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label32: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label33: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
           end
-          object VictoryLabel: TLabel
-            Left = 112
-            Top = 208
-            Width = 47
-            Height = 14
-            Caption = 'victory'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
+          object Panel11: TPanel
+            Left = 236
+            Top = 96
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 10
+            object Image11: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label34: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label35: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
+          end
+          object Panel12: TPanel
+            Left = 236
+            Top = 136
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 11
+            object Image12: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label36: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label37: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
+          end
+          object Panel13: TPanel
+            Left = 236
+            Top = 176
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 12
+            object Image13: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label38: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label39: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
+          end
+          object Panel14: TPanel
+            Left = 236
+            Top = 216
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 13
+            object Image14: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label40: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label41: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
+          end
+          object Panel15: TPanel
+            Left = 236
+            Top = 256
+            Width = 183
+            Height = 28
+            BevelOuter = bvNone
+            TabOrder = 14
+            object Image15: TImage
+              Left = 0
+              Top = 0
+              Width = 28
+              Height = 28
+              ParentShowHint = False
+              ShowHint = True
+            end
+            object Label42: TLabel
+              Left = 34
+              Top = 0
+              Width = 73
+              Height = 13
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ShowAccelChar = False
+            end
+            object Label43: TLabel
+              Left = 34
+              Top = 14
+              Width = 48
+              Height = 13
+              Caption = 'civilization'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
           end
         end
       end
       object ChatTabSheet: TTabSheet
         Caption = 'Chat'
         ImageIndex = 1
-        object ChatScrollBox: TScrollBox
-          Left = 0
-          Top = 0
-          Width = 855
-          Height = 574
-          Align = alClient
-          BevelOuter = bvNone
-          BorderStyle = bsNone
-          Color = clBtnHighlight
-          ParentColor = False
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
+        object ChatRichEdit: TRichEdit
+          Left = 16
+          Top = 16
+          Width = 641
+          Height = 580
+          Font.Charset = EASTEUROPE_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          ScrollBars = ssBoth
           TabOrder = 0
-          object ChatPaintBox: TPaintBox
-            Left = 0
-            Top = 0
-            Width = 855
-            Height = 574
-            Align = alClient
-            OnPaint = GeneralPaintBoxPaint
-          end
-          object ChatLabel: TJvLabel
-            Left = 12
-            Top = 12
-            Width = 37
-            Height = 17
-            Caption = 'Chat:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = 13390596
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object ChatWB: TEmbeddedWB
-            Left = 24
-            Top = 32
-            Width = 657
-            Height = 249
-            TabOrder = 0
-            RegisterAsDropTarget = False
-            DisableCtrlShortcuts = 'N'
-            UserInterfaceOptions = [DontUse3DBorders]
-            DisabledPopupMenus = [rcmAll]
-            About = ' EmbeddedWB http://bsalsa.com/'
-            EnableMessageHandler = False
-            PrintOptions.Margins.Left = 19.050000000000000000
-            PrintOptions.Margins.Right = 19.050000000000000000
-            PrintOptions.Margins.Top = 19.050000000000000000
-            PrintOptions.Margins.Bottom = 19.050000000000000000
-            PrintOptions.HTMLHeader.Strings = (
-              '<HTML></HTML>')
-            PrintOptions.Orientation = poPortrait
-            VisualEffects.DisableSounds = True
-            ControlData = {
-              4C000000E3300000F21300000000000000000000000000000000000000000000
-              000000004C000000000000000000000001000000E0D057007335CF11AE690800
-              2B2E126203000000000000004C0000000114020000000000C000000000000046
-              8000000000000000000000000000000000000000000000000000000000000000
-              00000000000000000100000000000000000000000000000000000000}
-          end
-        end
-      end
-      object TributesTabSheet: TTabSheet
-        Caption = 'Tributes'
-        ImageIndex = 2
-        object TributesScrollBox: TScrollBox
-          Left = 0
-          Top = 0
-          Width = 855
-          Height = 574
-          Align = alClient
-          BevelOuter = bvNone
-          BorderStyle = bsNone
-          Color = clBtnHighlight
-          ParentColor = False
-          TabOrder = 0
-          object TributingPaintBox: TPaintBox
-            Left = 0
-            Top = 0
-            Width = 855
-            Height = 574
-            Align = alClient
-            OnPaint = GeneralPaintBoxPaint
-          end
-          object TributingLabel: TJvLabel
-            Left = 12
-            Top = 12
-            Width = 62
-            Height = 17
-            Caption = 'Tributes:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = 13390596
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object TributesWB: TEmbeddedWB
-            Left = 24
-            Top = 32
-            Width = 657
-            Height = 249
-            TabOrder = 0
-            Silent = False
-            RegisterAsDropTarget = False
-            DisableCtrlShortcuts = 'N'
-            UserInterfaceOptions = [DontUse3DBorders]
-            DisabledPopupMenus = [rcmAll]
-            About = ' EmbeddedWB http://bsalsa.com/'
-            EnableMessageHandler = False
-            PrintOptions.Margins.Left = 19.050000000000000000
-            PrintOptions.Margins.Right = 19.050000000000000000
-            PrintOptions.Margins.Top = 19.050000000000000000
-            PrintOptions.Margins.Bottom = 19.050000000000000000
-            PrintOptions.HTMLHeader.Strings = (
-              '<HTML></HTML>')
-            PrintOptions.Orientation = poPortrait
-            VisualEffects.DisableSounds = True
-            ControlData = {
-              4C000000E3300000F21300000000000000000000000000000000000000000000
-              000000004C000000000000000000000001000000E0D057007335CF11AE690800
-              2B2E126203000000000000004C0000000114020000000000C000000000000046
-              8000000000000000000000000000000000000000000000000000000000000000
-              00000000000000000100000000000000000000000000000000000000}
-          end
         end
       end
       object ResearchesTabSheet: TTabSheet
         Caption = 'Researches'
-        ImageIndex = 3
-        object ResearchesScrollBox: TScrollBox
-          Left = 0
-          Top = 0
-          Width = 855
-          Height = 574
-          Align = alClient
-          BevelOuter = bvNone
-          BorderStyle = bsNone
-          Color = clBtnHighlight
-          ParentColor = False
+        ImageIndex = 2
+        OnResize = ResearchesTabSheetResize
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
+        object ResearchesGroupBox: TGroupBox
+          Left = 16
+          Top = 16
+          Width = 633
+          Height = 305
           TabOrder = 0
-          object ResearchesPaintBox: TPaintBox
-            Left = 0
-            Top = 0
-            Width = 855
-            Height = 574
-            Align = alClient
-            OnPaint = GeneralPaintBoxPaint
-          end
-          object ResearchesLabel: TJvLabel
-            Left = 12
-            Top = 12
-            Width = 74
-            Height = 17
-            Caption = 'Researches:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = 13390596
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object ResPaintBox: TPaintBox
-            Left = 24
-            Top = 32
-            Width = 105
-            Height = 105
-            OnMouseMove = ResPaintBoxMouseMove
-            OnPaint = ResPaintBoxPaint
-          end
-        end
-      end
-      object ExtraStatsTabSheet: TTabSheet
-        Caption = 'Extra stats'
-        ImageIndex = 4
-        object ExtraStatsScrollBox: TScrollBox
-          Left = 0
-          Top = 0
-          Width = 855
-          Height = 574
-          Align = alClient
-          BevelOuter = bvNone
-          BorderStyle = bsNone
-          Color = clBtnHighlight
-          ParentColor = False
-          TabOrder = 0
-          object ExtraStatsPaintBox: TPaintBox
-            Left = 0
-            Top = 0
-            Width = 855
-            Height = 574
-            Align = alClient
-            OnPaint = GeneralPaintBoxPaint
-          end
-          object ESLabel: TJvLabel
-            Left = 12
-            Top = 12
-            Width = 79
-            Height = 17
-            Caption = 'Extra stats:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = 13390596
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object UnitsPaintBox: TPaintBox
-            Left = 24
-            Top = 32
-            Width = 105
-            Height = 105
-            OnPaint = UnitsPaintBoxPaint
-          end
-          object BuildingsPaintBox: TPaintBox
-            Left = 152
-            Top = 32
-            Width = 105
-            Height = 105
-            OnPaint = BuildingsPaintBoxPaint
-          end
-        end
-      end
-      object ScenarioInfoTabSheet: TTabSheet
-        Caption = 'Scenario Information'
-        ImageIndex = 5
-        object ScenarioInfoScrollBox: TScrollBox
-          Left = 0
-          Top = 0
-          Width = 855
-          Height = 574
-          Align = alClient
-          BevelOuter = bvNone
-          BorderStyle = bsNone
-          Color = clBtnHighlight
-          ParentColor = False
-          TabOrder = 0
-          object ScenarioPaintBox: TPaintBox
-            Left = 0
-            Top = 0
-            Width = 855
-            Height = 574
-            Align = alClient
-            OnPaint = GeneralPaintBoxPaint
-          end
-          object SILabel: TJvLabel
-            Left = 12
-            Top = 12
-            Width = 139
-            Height = 17
-            Caption = 'Scenario Information:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = 13390596
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object ScBgPaintBox: TPaintBox
-            Left = 24
-            Top = 32
-            Width = 603
-            Height = 518
-            OnPaint = ScBgPaintBoxPaint
-          end
-          object BtnPaintBox1: TPaintBox
-            Left = 88
-            Top = 456
-            Width = 117
-            Height = 63
-            OnClick = BtnPaintBox1Click
-            OnPaint = BtnPaintBox1Paint
-          end
-          object BtnPaintBox2: TPaintBox
-            Left = 216
-            Top = 456
-            Width = 117
-            Height = 63
-            OnClick = BtnPaintBox1Click
-            OnPaint = BtnPaintBox1Paint
-          end
-          object BtnPaintBox3: TPaintBox
-            Left = 344
-            Top = 456
-            Width = 117
-            Height = 63
-            OnClick = BtnPaintBox1Click
-            OnPaint = BtnPaintBox1Paint
-          end
-          object BtnPaintBox4: TPaintBox
-            Left = 472
-            Top = 456
-            Width = 117
-            Height = 63
-            OnClick = BtnPaintBox1Click
-            OnPaint = BtnPaintBox1Paint
-          end
-          object JvLabel17: TJvLabel
-            Left = 234
-            Top = 480
-            Width = 81
-            Height = 17
-            Caption = 'Instructions'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWhite
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clBlack
-            ShadowSize = 1
-            Transparent = True
-            OnClick = JvLabel19Click
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel18: TJvLabel
-            Left = 380
-            Top = 480
-            Width = 38
-            Height = 17
-            Caption = 'Hints'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWhite
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clBlack
-            ShadowSize = 1
-            Transparent = True
-            OnClick = JvLabel19Click
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel20: TJvLabel
-            Left = 504
-            Top = 480
-            Width = 44
-            Height = 17
-            Caption = 'Scouts'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWhite
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clBlack
-            ShadowSize = 1
-            Transparent = True
-            OnClick = JvLabel19Click
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object JvLabel19: TJvLabel
-            Left = 120
-            Top = 480
-            Width = 50
-            Height = 17
-            Caption = 'General'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWhite
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clBlack
-            ShadowSize = 1
-            Transparent = True
-            OnClick = JvLabel19Click
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object HeaderLabel: TJvLabel
-            Left = 293
-            Top = 52
-            Width = 75
-            Height = 23
-            Caption = 'Caption'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWhite
-            Font.Height = -19
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clBlack
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -19
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object ScenarioMapPaintBox: TPaintBox
-            Left = 64
-            Top = 88
-            Width = 306
-            Height = 153
-            OnPaint = MapPaintBoxPaint
-          end
-          object ScContentLabel: TLabel
-            Left = 64
-            Top = 88
-            Width = 97
-            Height = 16
-            Caption = 'ScContentLabel'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -13
-            Font.Name = 'Georgia'
-            Font.Style = []
-            ParentFont = False
-          end
-        end
-      end
-      object CommentTabSheet: TTabSheet
-        Caption = 'Comment'
-        ImageIndex = 6
-        object CommentScrollBox: TScrollBox
-          Left = 0
-          Top = 0
-          Width = 855
-          Height = 574
-          Align = alClient
-          BevelOuter = bvNone
-          BorderStyle = bsNone
-          Color = clBtnHighlight
-          ParentColor = False
-          TabOrder = 0
-          object CommentPaintBox: TPaintBox
-            Left = 0
-            Top = 0
-            Width = 855
-            Height = 574
-            Align = alClient
-            OnPaint = GeneralPaintBoxPaint
-          end
-          object MemoShape: TShape
-            Left = 23
-            Top = 63
-            Width = 435
-            Height = 195
-          end
-          object CLabel: TJvLabel
-            Left = 12
-            Top = 12
-            Width = 169
-            Height = 17
-            Caption = 'Comment in recorded game:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = 13390596
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object CheckBox2PaintBox: TPaintBox
-            Left = 344
-            Top = 40
-            Width = 15
-            Height = 17
-            OnClick = CheckBox2PaintBoxClick
-            OnPaint = CheckBox2PaintBoxPaint
-          end
-          object UpdateBtnPaintBox: TPaintBox
-            Left = 392
-            Top = 264
-            Width = 65
-            Height = 28
-            OnClick = UpdateBtnPaintBoxClick
-            OnMouseDown = UpdateBtnPaintBoxMouseDown
-            OnMouseUp = UpdateBtnPaintBoxMouseUp
-            OnPaint = UpdateBtnPaintBoxPaint
-          end
-          object CheckBox1PaintBox: TPaintBox
-            Left = 24
-            Top = 40
-            Width = 15
-            Height = 17
-            OnClick = CheckBox1PaintBoxClick
-            OnPaint = CheckBox1PaintBoxPaint
-          end
-          object ACLabel: TLabel
-            Left = 44
-            Top = 42
-            Width = 88
-            Height = 14
-            Caption = 'add comment'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
-          end
-          object CBLabel: TLabel
-            Left = 364
-            Top = 42
-            Width = 91
-            Height = 14
-            Caption = 'create backup'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
-          end
-          object UpdateLabel: TLabel
-            Left = 401
-            Top = 271
-            Width = 46
-            Height = 14
-            Caption = 'update'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Georgia'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Transparent = True
-            OnClick = UpdateBtnPaintBoxClick
-            OnMouseDown = UpdateBtnPaintBoxMouseDown
-            OnMouseUp = UpdateBtnPaintBoxMouseUp
-          end
-          object CommentMemo: TMemo
-            Left = 24
-            Top = 64
-            Width = 433
-            Height = 193
+          object ScrollBox: TScrollBox
+            Left = 182
+            Top = 16
+            Width = 430
+            Height = 234
+            HorzScrollBar.Increment = 38
+            HorzScrollBar.Tracking = True
+            BevelInner = bvNone
+            BevelOuter = bvNone
             BorderStyle = bsNone
-            Color = 1789036
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlack
-            Font.Height = -15
-            Font.Name = 'Georgia'
-            Font.Style = []
-            ParentFont = False
-            ScrollBars = ssVertical
+            ParentBackground = True
             TabOrder = 0
+            OnResize = ScrollBoxResize
+            object ResearchesImage: TImage
+              Left = 0
+              Top = 0
+              Width = 400
+              Height = 214
+              AutoSize = True
+              ParentShowHint = False
+              ShowHint = True
+              OnMouseMove = ResearchesImageMouseMove
+            end
+          end
+          object PlayersPanel: TPanel
+            Left = 16
+            Top = 16
+            Width = 150
+            Height = 281
+            BevelOuter = bvNone
+            TabOrder = 1
+            object Label46: TLabel
+              Left = 75
+              Top = 7
+              Width = 73
+              Height = 13
+              Alignment = taRightJustify
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ParentShowHint = False
+              ShowAccelChar = False
+              ShowHint = True
+            end
+            object Label47: TLabel
+              Left = 75
+              Top = 38
+              Width = 73
+              Height = 13
+              Alignment = taRightJustify
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ParentShowHint = False
+              ShowAccelChar = False
+              ShowHint = True
+            end
+            object Label48: TLabel
+              Left = 75
+              Top = 69
+              Width = 73
+              Height = 13
+              Alignment = taRightJustify
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ParentShowHint = False
+              ShowAccelChar = False
+              ShowHint = True
+            end
+            object Label49: TLabel
+              Left = 75
+              Top = 100
+              Width = 73
+              Height = 13
+              Alignment = taRightJustify
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ParentShowHint = False
+              ShowAccelChar = False
+              ShowHint = True
+            end
+            object Label50: TLabel
+              Left = 75
+              Top = 131
+              Width = 73
+              Height = 13
+              Alignment = taRightJustify
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ParentShowHint = False
+              ShowAccelChar = False
+              ShowHint = True
+            end
+            object Label51: TLabel
+              Left = 75
+              Top = 162
+              Width = 73
+              Height = 13
+              Alignment = taRightJustify
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ParentShowHint = False
+              ShowAccelChar = False
+              ShowHint = True
+            end
+            object Label52: TLabel
+              Left = 75
+              Top = 193
+              Width = 73
+              Height = 13
+              Alignment = taRightJustify
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ParentShowHint = False
+              ShowAccelChar = False
+              ShowHint = True
+            end
+            object Label53: TLabel
+              Left = 75
+              Top = 224
+              Width = 73
+              Height = 13
+              Alignment = taRightJustify
+              Caption = 'player-name'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+              ParentShowHint = False
+              ShowAccelChar = False
+              ShowHint = True
+            end
+            object Label54: TLabel
+              Left = 116
+              Top = 255
+              Width = 32
+              Height = 13
+              Alignment = taRightJustify
+              Caption = 'minute'
+              ParentShowHint = False
+              ShowHint = True
+            end
           end
         end
       end
-      object AboutTabSheet: TTabSheet
-        Caption = 'About'
-        ImageIndex = 7
-        object AboutScrollBox: TScrollBox
-          Left = 0
-          Top = 0
-          Width = 855
-          Height = 574
-          Align = alClient
-          BevelOuter = bvNone
-          BorderStyle = bsNone
-          Color = clBtnHighlight
-          ParentColor = False
-          TabOrder = 0
-          object AboutPaintBox: TPaintBox
-            Left = 0
-            Top = 0
-            Width = 855
-            Height = 574
-            Align = alClient
-            OnPaint = GeneralPaintBoxPaint
-          end
-          object APaintBox: TPaintBox
-            Left = 24
-            Top = 32
-            Width = 603
-            Height = 518
-            OnPaint = ScBgPaintBoxPaint
-          end
-          object JvLabel16: TJvLabel
-            Left = 212
-            Top = 52
-            Width = 128
-            Height = 23
-            Caption = 'about-caption'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWhite
-            Font.Height = -19
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clBlack
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -19
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object AboutLabel: TJvLabel
-            Left = 12
-            Top = 12
-            Width = 45
-            Height = 17
-            Caption = 'About:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = 13390596
-            Font.Height = -12
-            Font.Name = 'Lucida Blackletter'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ShadowColor = clWhite
-            ShadowSize = 1
-            Transparent = True
-            HotTrackFont.Charset = DEFAULT_CHARSET
-            HotTrackFont.Color = clWindowText
-            HotTrackFont.Height = -12
-            HotTrackFont.Name = 'Lucida Blackletter'
-            HotTrackFont.Style = []
-          end
-          object AboutContentLabel: TLabel
-            Left = 64
-            Top = 104
-            Width = 521
-            Height = 169
-            AutoSize = False
-            Caption = 'credits-note'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -16
-            Font.Name = 'Georgia'
-            Font.Style = []
-            ParentFont = False
-            WordWrap = True
-          end
-          object CopyrightLabel: TLabel
-            Left = 128
-            Top = 400
-            Width = 94
-            Height = 16
-            Caption = 'copyright-note'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -13
-            Font.Name = 'Georgia'
-            Font.Style = []
-            ParentFont = False
-          end
-          object Label3: TLabel
-            Left = 72
-            Top = 416
-            Width = 182
-            Height = 16
-            Caption = 'Latest release can be found at'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -13
-            Font.Name = 'Georgia'
-            Font.Style = []
-            ParentFont = False
-          end
-          object PluginURLLabel: TLabel
-            Left = 256
-            Top = 416
-            Width = 60
-            Height = 15
-            Cursor = crHandPoint
-            Hint = 'Click here to visit the homepage.'
-            Caption = 'plugin-url'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clBlue
-            Font.Height = -12
-            Font.Name = 'Georgia'
-            Font.Style = [fsUnderline]
-            ParentFont = False
-            ParentShowHint = False
-            ShowHint = True
-            OnClick = PluginURLLabelClick
-          end
-          object PluginInfoLabel: TLabel
-            Left = 68
-            Top = 384
-            Width = 68
-            Height = 16
-            Caption = 'plugin-info'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -13
-            Font.Name = 'Georgia'
-            Font.Style = []
-            ParentFont = False
-          end
-          object OSPaintBox: TPaintBox
-            Left = 480
-            Top = 400
-            Width = 88
-            Height = 32
-            Cursor = crHandPoint
-            Hint = 'Click here to enter the site of Open Source Initiative.'
-            ParentShowHint = False
-            ShowHint = True
-            OnClick = OSPaintBoxClick
-            OnPaint = OSPaintBoxPaint
-          end
-        end
-      end
     end
-  end
-  object MapPopupMenu: TPopupMenu
-    Left = 796
-    Top = 121
-    object SaveMapAs: TMenuItem
-      Caption = '&Save map as...'
-      OnClick = SaveMapAsClick
-    end
-  end
-  object ChatPopupMenu: TPopupMenu
-    Left = 796
-    Top = 154
-    object SaveasHTML: TMenuItem
-      Caption = '&Save chat as HTML...'
-      OnClick = SaveasHTMLClick
-    end
-  end
-  object ImageList: TImageList
-    Left = 796
-    Top = 82
   end
 end
