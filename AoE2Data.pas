@@ -24,7 +24,7 @@ unit AoE2Data;
 interface
 
 uses
-  Classes, uRecAnalystConsts;
+  Classes;
 
 var
   fGameType,
