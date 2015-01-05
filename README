@@ -1,0 +1,24 @@
+A2CView - AoE2 Recorded Games Content Plugin
+------------------------------------------------
+
+A2CView is a content plugin for Total Commander.
+This plugin is intended to display information about AoE2 recorded games in Total Commander's columns.
+Supported extensions: mgl, mgx, mgz (AOK, AOC & AOFE recorded games)
+
+Copyright (c) 2009-2013 biegleux <biegleux@gmail.com>
+Homepage: http://aoc-mgx-utils.sourceforge.net/
+
+License Agreement
+-----------------
+This plugin is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This plugin is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this plugin; if not, see <http://www.gnu.org/licenses>.
