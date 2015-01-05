@@ -5,8 +5,7 @@ A2LView is a lister plugin for Total Commander.
 This plugin is intended to display information about AoE2 recorded games as well as scenario files.
 Supported extensions: mgl, mgx, scn, scx (AOK & AOC recorded games, AOK & AOC scenario files)
 
-Copyright (c) 2009 biegleux <biegleux@gmail.com>
-Homepage: http://aoc-mgx-utils.sourceforge.net/
+Copyright (c) 2009-2013 biegleux <biegleux[at]gmail[dot]com>
 
 License Agreement
 -----------------

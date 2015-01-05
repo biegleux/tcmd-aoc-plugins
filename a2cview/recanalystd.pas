@@ -1,5 +1,4 @@
 {*
- * $Id$
  * Interface for RecAnalyst Library
 
  * Copyright (c) 2009-2013 biegleux <biegleux[at]gmail[dot]com>

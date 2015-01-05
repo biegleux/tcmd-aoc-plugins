@@ -1,5 +1,4 @@
 {*
- * $Id$
  * This file is part of the A2LView project.
  *
  * Copyright (c) 2009-2013 biegleux <biegleux[at]gmail[dot]com>
